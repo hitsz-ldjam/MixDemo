@@ -24,12 +24,28 @@ void DmStraightExpandCtrl::start() {
         yield_return(new Coroutine::WaitForSeconds(_this->waitSec));
         _this->speed = _this->speedExpand;
     }, this);
+
+    //Coroutine::startCoroutine([](MX_YIELD_HANDLE, DmStraightExpandCtrl* _this) {
+    //    // bug prone
+    //    while(true) {
+    //        auto i = 0;
+    //        for(const auto& dm : _this->dmList) {
+    //            auto& trans = dm->transform();
+    //            auto newPos = trans.getPosition() + trans.forward() * _this->speed * Time::DeltaTime();
+    //            trans.setPosition(newPos);
+    //            if(++i == _this->dmList.size() / 9) {
+    //                i = 0;
+    //                yield_return(nullptr);
+    //            }
+    //        }
+    //    }
+    //}, this);
 }
 
 void DmStraightExpandCtrl::update() {
     for(const auto& dm : dmList) {
-        //if(!dm->activeSelf())
-        //    dmList.erase(dm);
+    //if(!dm->activeSelf())
+    //    dmList.erase(dm);
         auto& trans = dm->transform();
         auto newPos = trans.getPosition() + trans.forward() * speed * Time::DeltaTime();
         trans.setPosition(newPos);

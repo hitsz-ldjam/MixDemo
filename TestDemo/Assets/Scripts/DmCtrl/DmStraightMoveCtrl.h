@@ -12,8 +12,9 @@ public:
 
     DmStraightMoveCtrl(const float _speed) : speed(_speed) {}
 
+    void add(const HGameObject& _dm);
+
 private:
-    void start() override;
     void update() override;
 
     float speed;

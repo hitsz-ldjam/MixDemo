@@ -18,6 +18,7 @@ private:
     void update() override;
 
     void shootBlueSphereImpl();
+    void shootPurpleSphereImpl();
 
     HDmPool bigballPool;
 };

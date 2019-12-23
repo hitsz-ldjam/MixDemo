@@ -4,7 +4,9 @@
 
 MX_IMPLEMENT_RTTI(DmStraightMoveCtrl, Script)
 
-void DmStraightMoveCtrl::start() { }
+void DmStraightMoveCtrl::add(const HGameObject& _dm) {
+    dmList.push_back(_dm);
+}
 
 void DmStraightMoveCtrl::update() {
     for(const auto& dm : dmList) {

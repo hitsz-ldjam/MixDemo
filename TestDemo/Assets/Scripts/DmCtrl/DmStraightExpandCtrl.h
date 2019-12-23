@@ -8,10 +8,7 @@ MX_DECLARE_RTTI
 
 public:
     DmStraightExpandCtrl() = default;
-    ~DmStraightExpandCtrl() {
-        puts("DmStarightExpandCtrl DTOR");
-        system("pause");
-    };
+    ~DmStraightExpandCtrl() = default;
 
     DmStraightExpandCtrl(const float _speedSlow,
                          const float _speedExpand,
