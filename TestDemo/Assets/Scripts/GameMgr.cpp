@@ -2,6 +2,7 @@
 #include "Prefabs/Prefab.h"
 #include "Utils/SimpleMaterials.h"
 #include "Enemy/Spell06/Spell06MasterCtrl.h"
+#include "Enemy/Spell03/Spell03BlueSphere.h"
 
 MX_IMPLEMENT_RTTI(GameMgr, Script)
 
@@ -14,7 +15,8 @@ GameMgr::GameMgr(HGameObject _player,
 
 void GameMgr::start() {
     // todo: state machine
-    enemy->addComponent<Spell06MasterCtrl>(bigballPool);
+    //enemy->addComponent<Spell06MasterCtrl>(bigballPool);
+    enemy->addComponent<Spell03BlueSphere>(player, bigballPool);
 }
 
 void GameMgr::update() { }

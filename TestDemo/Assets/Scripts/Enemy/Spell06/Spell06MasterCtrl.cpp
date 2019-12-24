@@ -28,29 +28,32 @@ void Spell06MasterCtrl::shootBlueSphereImpl() {
     auto ec2 = ctrl->addComponent<DmStraightExpandCtrl>(3, 6, 3, 162);
     auto ec3 = ctrl->addComponent<DmStraightExpandCtrl>(3, 3, 3, 162);
 
-    ShootSphere::Shoot_162_20(bigballPool,
-                              transform()->getPosition(),
-                              transform()->getRotation(),
-                              [&ec = ec1](const HGameObject& _dm) {
-                                  _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Blue());
-                                  ec->add(_dm);
-                              });
+    ShootSphere::Shoot(ShootSphere::SphereType::Verts_162,
+                       bigballPool,
+                       transform()->getPosition(),
+                       transform()->getRotation(),
+                       [&ec = ec1](const HGameObject& _dm) {
+                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Blue());
+                           ec->add(_dm);
+                       });
 
-    ShootSphere::Shoot_162_20(bigballPool,
-                              transform()->getPosition(),
-                              transform()->getRotation(),
-                              [&ec = ec2](const HGameObject& _dm) {
-                                  _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Blue());
-                                  ec->add(_dm);
-                              });
+    ShootSphere::Shoot(ShootSphere::SphereType::Verts_162,
+                       bigballPool,
+                       transform()->getPosition(),
+                       transform()->getRotation(),
+                       [&ec = ec2](const HGameObject& _dm) {
+                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Blue());
+                           ec->add(_dm);
+                       });
 
-    ShootSphere::Shoot_162_20(bigballPool,
-                              transform()->getPosition(),
-                              transform()->getRotation(),
-                              [&ec = ec3](const HGameObject& _dm) {
-                                  _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Blue());
-                                  ec->add(_dm);
-                              });
+    ShootSphere::Shoot(ShootSphere::SphereType::Verts_162,
+                       bigballPool,
+                       transform()->getPosition(),
+                       transform()->getRotation(),
+                       [&ec = ec3](const HGameObject& _dm) {
+                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Blue());
+                           ec->add(_dm);
+                       });
 }
 
 void Spell06MasterCtrl::shootPurpleSphereImpl() {
@@ -58,19 +61,21 @@ void Spell06MasterCtrl::shootPurpleSphereImpl() {
     auto ec1 = ctrl->addComponent<DmStraightExpandCtrl>(3, 6, 3, 162);
     auto ec2 = ctrl->addComponent<DmStraightExpandCtrl>(3, 3, 3, 162);
 
-    ShootSphere::Shoot_162_20(bigballPool,
-                              transform()->getPosition(),
-                              Quaternion::AngleAxis(Math::Constants::Pi / 20, transform()->up()) * transform()->getRotation(),
-                              [&ec = ec1](const HGameObject& _dm) {
-                                  _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Purple());
-                                  ec->add(_dm);
-                              });
+    ShootSphere::Shoot(ShootSphere::SphereType::Verts_162,
+                       bigballPool,
+                       transform()->getPosition(),
+                       Quaternion::AngleAxis(Math::Constants::Pi / 20, transform()->up()) * transform()->getRotation(),
+                       [&ec = ec1](const HGameObject& _dm) {
+                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Purple());
+                           ec->add(_dm);
+                       });
 
-    ShootSphere::Shoot_162_20(bigballPool,
-                              transform()->getPosition(),
-                              Quaternion::AngleAxis(Math::Constants::Pi / 20, transform()->up()) * transform()->getRotation(),
-                              [&ec = ec2](const HGameObject& _dm) {
-                                  _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Purple());
-                                  ec->add(_dm);
-                              });
+    ShootSphere::Shoot(ShootSphere::SphereType::Verts_162,
+                       bigballPool,
+                       transform()->getPosition(),
+                       Quaternion::AngleAxis(Math::Constants::Pi / 20, transform()->up()) * transform()->getRotation(),
+                       [&ec = ec2](const HGameObject& _dm) {
+                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Purple());
+                           ec->add(_dm);
+                       });
 }
