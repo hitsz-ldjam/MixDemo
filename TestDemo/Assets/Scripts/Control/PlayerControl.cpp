@@ -40,8 +40,8 @@ Vector3f PlayerControl::dirFromGamepad() {
     }
     auto dir = Vector3f(dir2f.x, dirh.y, dir2f.y);
 
-    dir = Quaternion().Euler(0.0f, camera_y, 0.0f) * dir;
-    transform()->setRotation(Quaternion().Euler(0.0f, camera_y, 0.0f));
+    dir = Quaternion::Euler(0.0f, camera_y, 0.0f) * dir;
+    transform()->setRotation(Quaternion::Euler(0.0f, camera_y, 0.0f));
 
     return !(dir.length() > 0.0f) ? Vector3f::Zero : dir.normalize();
 }
@@ -73,8 +73,7 @@ Vector3f PlayerControl::dirFromKeyboard() {
         dir += Vector3f::Down;
     }
 
-    dir = Quaternion().Euler(0.0f, camera_y, 0.0f) * dir;
-    transform()->setRotation(Quaternion().Euler(0.0f, camera_y, 0.0f));
+    dir = Quaternion::Euler(0.0f, camera_y, 0.0f) * dir;
 
     return dir.length() > 0.0f ? dir.normalize() : Vector3f::Zero;
 }

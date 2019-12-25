@@ -1,8 +1,8 @@
 #include "PlayerControll.h"
 
-#include "../Mx/Input/MxInput.h"
-#include "../Mx/Component/Camera/MxCamera.h"
-#include "../Mx/Window/MxWindow.h"
+#include "../../../../Mx/Input/MxInput.h"
+#include "../../../../Mx/Component/Camera/MxCamera.h"
+#include "../../../../Mx/Window/MxWindow.h"
 #include "PlayerAdapter.h"
 
 
@@ -29,7 +29,7 @@
 	Vector3f PlayerControll::dirFromGamepad() {
 		auto dir2f = Input::Get()->getGamepadLeftStickAxis();
 
-		float camera_y = mainCamera->transform()->getLocalRotation().y;
+		float camera_y = mainCamera->transform()->getLocalRotation().toEuler().y ;
 
 		Vector3f dirh;
 		if (Input::Get()->isButtonHold(ButtonCode::Gamepad_X)) {
@@ -49,8 +49,7 @@
 	Vector3f PlayerControll::dirFromKeyboard() {
 		Vector3f dir;
 
-		float camera_y = mainCamera->transform()->getLocalRotation().y;
-
+		float camera_y = mainCamera->transform()->getLocalRotation().toEuler().y ;
 		if (Input::Get()->isButtonHold(ButtonCode::W)) {
 			dir += Vector3f::Forward;
 		}

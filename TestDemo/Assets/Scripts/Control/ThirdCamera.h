@@ -39,6 +39,8 @@ public:
 
 private:
 
+    Vector3f fouces{ 0,2,0 };
+
     float freeDistance = 5.0f;
 
     float minDistance = 2.5f;
@@ -55,15 +57,15 @@ private:
 
     HGameObject CameraPivot;
 
-    bool CanControlDirection = false;
+    bool CanControlDirection = true;
 
     Vector3f PredictCameraPosition;
 
     Vector3f offset;
 
-    float maxDepression = 8.0f;
+    float maxDepression = 1.57f;
 
-    float maxEvelation = 8.0f;
+    float maxEvelation = 1.57f;
 
     void start() override;
 

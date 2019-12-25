@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../Mx/Component/Script/MxScript.h"
-#include "../Mx/GameObject/MxGameObject.h"
-#include "../Mx/Component/Camera/MxCamera.h"
-#include "../Mx/Scene/MxSceneManager.h"
-#include "../Mx/Math/MxVector.h"
-#include "../Mx/Utils/MxEvent.h"
-#include "../MxApplicationBase.h"
+#include "../../../../Mx/Component/Script/MxScript.h"
+#include "../../../../Mx/GameObject/MxGameObject.h"
+#include "../../../../Mx/Component/Camera/MxCamera.h"
+#include "../../../../Mx/Scene/MxSceneManager.h"
+#include "../../../../Mx/Math/MxVector.h"
+#include "../../../../Mx/Utils/MxEvent.h"
+#include "../../../../MxApplicationBase.h"
 
 
 

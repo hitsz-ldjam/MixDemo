@@ -4,6 +4,7 @@
 #include "../../../../Mx/Input/MxInput.h"
 #include "../../../../Mx/Component/Transform/MxTransform.h"
 #include "../../../../Mx/GameObject/MxGameObject.h"
+#include "../../../../Mx/Log/MxLog.h"
 
 MX_IMPLEMENT_RTTI(ThirdCamera, Script);
 
@@ -23,14 +24,19 @@ void ThirdCamera::fixedUpdate() { }
 void ThirdCamera::FreeCamera() {
     offset = offset.normalize() * freeDistance;
 
-    transform()->setPosition(Vector3f::Lerp(transform()->getPosition(), CameraPivot->transform().getPosition() + offset, 1.0f));
+    transform()->setPosition(Vector3f::Lerp(transform()->getPosition(),    
+                                                            CameraPivot->transform().getPosition() + offset, 1.0f));
 
     if(CanControlDirection) {
-        Quaternion TargetBodyCurrentRotation = CameraPivot->transform().getRotation();
+        Vector3f TargetBodyCurrentRotation = { CameraPivot->transform().getRotation().x,
+                                                                           CameraPivot->transform().getRotation().y,
+                                                                           CameraPivot->transform().getRotation().z };
 
-        CameraPivot->transform().rotate(Quaternion().Euler(Vector3f(CameraPivot->transform().getLocalRotation().x, transform()->getLocalRotation().y, CameraPivot->transform().getLocalRotation().z)));
+        CameraPivot->transform().setLocalRotation(Quaternion::Euler(Vector3f(CameraPivot->transform().getLocalRotation().toEuler().x,
+                                                                                                                transform()->getLocalRotation().toEuler().y,
+                                                                                                                CameraPivot->transform().getLocalRotation().toEuler().z)));
     }
-
+  
     if(canControlDistance) {
         float ScrollWheel = Input::Get()->getAxis(AxisCode::Mouse_WheelY);
         //if (Input::Get().getAxis(Mouse_WheelY)) {
@@ -39,26 +45,38 @@ void ThirdCamera::FreeCamera() {
         freeDistance -= ScrollWheel * distanceSpeed;
     }
 
-    transform()->lookAt(CameraPivot->transform().getPosition());
 
     float eulerX = transform()->getLocalRotation().x;
     float inputY = Input::Get()->getMousePositionDelta().y;
 
-    transform()->rotateAround(CameraPivot->transform().getPosition(), Vector3f::Up, rotateSpeed * Input::Get()->getMousePositionDelta().x);
+    transform()->rotateAround(CameraPivot->transform().getPosition(),  
+                                                                         Vector3f::Up, rotateSpeed * Input::Get()->getMousePositionDelta().x);
 
-    if(eulerX > maxDepression && eulerX < 90) {
+    if(eulerX > maxDepression && eulerX < 1.57) {
         if(inputY > 0)
-            transform()->rotateAround(CameraPivot->transform().getPosition(), Vector3f::Right, -rotateSpeed * inputY);
+            transform()->rotateAround(CameraPivot->transform().getPosition() + fouces, 
+                                                                                Vector3f::Right, -rotateSpeed * inputY);
     }
-    else if(eulerX < 360 - maxEvelation && eulerX > 270) {
+    else if(eulerX < 6.28 - maxEvelation && eulerX > 4.71) {
         if(inputY < 0)
-            transform()->rotateAround(CameraPivot->transform().getPosition(), Vector3f::Right, -rotateSpeed * inputY);
+            transform()->rotateAround(CameraPivot->transform().getPosition() + fouces, 
+                                                                                Vector3f::Right, -rotateSpeed * inputY);
     }
     else {
 
-        transform()->rotateAround(CameraPivot->transform().getPosition(), Vector3f::Right, -rotateSpeed * inputY);
+        transform()->rotateAround(CameraPivot->transform().getPosition() + fouces, 
+                                                                                Vector3f::Right, -rotateSpeed * inputY);
 
     }
+
+    if (transform()->getLocalRotation().z) {
+        float rotx = transform()->getLocalRotation().x;
+        float roty = transform()->getLocalRotation().y;
+
+        transform()->setLocalRotation(Quaternion::Euler(Vector3f(rotx, roty, 0.0f)));
+    }
+
+    transform()->lookAt(CameraPivot->transform().getPosition() + fouces);
 
     offset = transform()->getPosition() - CameraPivot->transform().getPosition();
     offset = offset.normalize() * freeDistance;
@@ -72,6 +90,7 @@ float ThirdCamera::Clamp(float _clamp, float _x, float _y) {
     if(_clamp > _y) {
         return _y;
     }
+    return _clamp;
 }
 
 void ThirdCamera::setfreeDistance(float _freeDistance) {
