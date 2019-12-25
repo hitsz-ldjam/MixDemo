@@ -27,6 +27,8 @@ public:
 
     void setrotateSpeed(float _rotateSpeed);
 
+    void setrotateSpeedy(float _rotateSpeedy);
+
     void setTargetBodyRotateLerp(float _TargetBodyRotateLerp);
 
     void isCanControlDirection(bool _CanControlDirection);
@@ -37,7 +39,13 @@ public:
 
     float Clamp(float _clamp, float _x, float _y);
 
+    void Mixcatch (float _m);
+
+    float Angle(Vector3f _a,Vector3f _b);
+
 private:
+
+    float mix = 0;
 
     Vector3f fouces{ 0,2,0 };
 
@@ -53,7 +61,9 @@ private:
 
     float rotateSpeed = .01f;
 
-    float TargetBodyRotateLerp = 0.3f;
+    float rotateSpeedy = .01f;
+
+    float TargetBodyRotateLerp = 0.33f;
 
     HGameObject CameraPivot;
 

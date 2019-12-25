@@ -2,6 +2,7 @@
 #include "../../../../Mx/Component/Script/MxScript.h"
 #include "../../../../Mx/Math/MxVector3.h"
 #include "PlayerAdapter.h"
+#include "ThirdCamera.h"
 
 using namespace Mix;
 
@@ -29,6 +30,8 @@ private:
     SceneObjectHandle<PlayerAdapter> mAdapter;
 
     HCamera mainCamera;
+
+    SceneObjectHandle<ThirdCamera> mThirdCamera;
 
 };
 

@@ -24,19 +24,16 @@ void ThirdCamera::fixedUpdate() { }
 void ThirdCamera::FreeCamera() {
     offset = offset.normalize() * freeDistance;
 
-    transform()->setPosition(Vector3f::Lerp(transform()->getPosition(),    
-                                                            CameraPivot->transform().getPosition() + offset, 1.0f));
+    transform()->setPosition(Vector3f::Lerp(transform()->getPosition(),
+        CameraPivot->transform().getPosition() + offset, 1.0f));
 
-    if(CanControlDirection) {
-        Vector3f TargetBodyCurrentRotation = { CameraPivot->transform().getRotation().x,
-                                                                           CameraPivot->transform().getRotation().y,
-                                                                           CameraPivot->transform().getRotation().z };
-
-        CameraPivot->transform().setLocalRotation(Quaternion::Euler(Vector3f(CameraPivot->transform().getLocalRotation().toEuler().x,
-                                                                                                                transform()->getLocalRotation().toEuler().y,
-                                                                                                                CameraPivot->transform().getLocalRotation().toEuler().z)));
+    if (CanControlDirection) {
+        Quaternion TargetBodyCurrentRotation = CameraPivot->transform().getRotation();
+            CameraPivot->transform().setRotation(TargetBodyCurrentRotation.lerp(Quaternion::Euler(Vector3f(CameraPivot->transform().getRotation().toEuler().x,
+                transform()->getRotation().toEuler().y,
+                CameraPivot->transform().getRotation().toEuler().z)), TargetBodyRotateLerp));
     }
-  
+    //Log::Info("%1%", Input::Get()->getMousePositionDelta().x);
     if(canControlDistance) {
         float ScrollWheel = Input::Get()->getAxis(AxisCode::Mouse_WheelY);
         //if (Input::Get().getAxis(Mouse_WheelY)) {
@@ -46,26 +43,27 @@ void ThirdCamera::FreeCamera() {
     }
 
 
-    float eulerX = transform()->getLocalRotation().x;
+    float eulerX = transform()->getLocalRotation().toEuler().x;
     float inputY = Input::Get()->getMousePositionDelta().y;
 
+    Mixcatch( Input::Get()->getMousePositionDelta().x);
     transform()->rotateAround(CameraPivot->transform().getPosition(),  
                                                                          Vector3f::Up, rotateSpeed * Input::Get()->getMousePositionDelta().x);
 
     if(eulerX > maxDepression && eulerX < 1.57) {
         if(inputY > 0)
             transform()->rotateAround(CameraPivot->transform().getPosition() + fouces, 
-                                                                                Vector3f::Right, -rotateSpeed * inputY);
+                                                                                Vector3f::Right, rotateSpeedy * inputY);
     }
     else if(eulerX < 6.28 - maxEvelation && eulerX > 4.71) {
         if(inputY < 0)
             transform()->rotateAround(CameraPivot->transform().getPosition() + fouces, 
-                                                                                Vector3f::Right, -rotateSpeed * inputY);
+                                                                                Vector3f::Right, rotateSpeedy * inputY);
     }
     else {
 
         transform()->rotateAround(CameraPivot->transform().getPosition() + fouces, 
-                                                                                Vector3f::Right, -rotateSpeed * inputY);
+                                                                                Vector3f::Right, rotateSpeedy * inputY);
 
     }
 
@@ -77,10 +75,23 @@ void ThirdCamera::FreeCamera() {
     }
 
     transform()->lookAt(CameraPivot->transform().getPosition() + fouces);
-
+    
     offset = transform()->getPosition() - CameraPivot->transform().getPosition();
     offset = offset.normalize() * freeDistance;
     transform()->setPosition(CameraPivot->transform().getPosition() + offset);
+}
+
+void ThirdCamera::Mixcatch(float _m) {
+    mix += rotateSpeed * _m;
+    if (mix >= 1.57f||
+        mix<=-1.57f) {
+        transform()->rotateAround(CameraPivot->transform().getPosition(),
+            Vector3f::Up, -0.01f * Input::Get()->getMousePositionDelta().x);
+    }
+    else
+    {
+        setrotateSpeed(0.01f);
+    }
 }
 
 float ThirdCamera::Clamp(float _clamp, float _x, float _y) {
@@ -91,6 +102,14 @@ float ThirdCamera::Clamp(float _clamp, float _x, float _y) {
         return _y;
     }
     return _clamp;
+}
+
+float ThirdCamera::Angle(Vector3f _a, Vector3f _b) {
+    float z = _a.z - _b.z;
+    float y = _a.y - _b.y;
+    float x = _a.x - _b.x;
+    float Ag = atan2(abs(z), sqrt(x * x + y * y));
+    return Ag;
 }
 
 void ThirdCamera::setfreeDistance(float _freeDistance) {
@@ -115,6 +134,10 @@ void ThirdCamera::setdistanceSpeed(float _distanceSpeed) {
 
 void ThirdCamera::setrotateSpeed(float _rotateSpeed) {
     rotateSpeed = _rotateSpeed;
+}
+
+void ThirdCamera::setrotateSpeedy(float _rotateSpeedy) {
+    rotateSpeedy = _rotateSpeedy;
 }
 
 void ThirdCamera::setTargetBodyRotateLerp(float _TargetBodyRotateLerp) {

@@ -30,8 +30,8 @@ private:
 
     float mHMoveSpeed = 0.5f;
     float mLMoveSpeed = 0.2f;
-    float mAccelerate = 0.5f;
-    float mDecelerate = 0.5f;
+    float mAccelerate = 0.2f;
+    float mDecelerate = 0.2f;
     Vector3f mSmoothMove;
 
 };

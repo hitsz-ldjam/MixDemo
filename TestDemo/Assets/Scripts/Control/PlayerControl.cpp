@@ -11,6 +11,8 @@ MX_IMPLEMENT_RTTI(PlayerControl, Script);
 void PlayerControl::start() {
     mAdapter = mGameObject->getComponent<PlayerAdapter>();
     auto mainCamera = SceneManager::Get()->getActiveScene()->getMainCamera();
+    auto camera = SceneManager::Get()->getActiveScene()->getMainCamera()->getGameObject();
+    mThirdCamera = camera->getComponent<ThirdCamera>();
 }
 
 void PlayerControl::update() {
@@ -29,7 +31,7 @@ Vector3f PlayerControl::getDir() {
 Vector3f PlayerControl::dirFromGamepad() {
     auto dir2f = Input::Get()->getGamepadLeftStickAxis();
 
-    float camera_y = mainCamera->transform()->getLocalRotation().y;
+    float camera_y = mainCamera->transform()->getLocalRotation().toEuler().y;
 
     Vector3f dirh;
     if(Input::Get()->isButtonHold(ButtonCode::Gamepad_X)) {
@@ -38,10 +40,18 @@ Vector3f PlayerControl::dirFromGamepad() {
     if(Input::Get()->isButtonHold(ButtonCode::Gamepad_B)) {
         dirh += Vector3f::Down;
     }
+    if ((Input::Get()->getGamepadLeftStickAxis() != Vector2f::Zero) ||
+        Input::Get()->isButtonHold(ButtonCode::Gamepad_X) ||
+        Input::Get()->isButtonHold(ButtonCode::Gamepad_B) ) {
+        mThirdCamera->isCanControlDirection(true);
+    }
+    else
+    {
+        mThirdCamera->isCanControlDirection(false);
+    }
     auto dir = Vector3f(dir2f.x, dirh.y, dir2f.y);
 
     dir = Quaternion::Euler(0.0f, camera_y, 0.0f) * dir;
-    transform()->setRotation(Quaternion::Euler(0.0f, camera_y, 0.0f));
 
     return !(dir.length() > 0.0f) ? Vector3f::Zero : dir.normalize();
 }
@@ -49,7 +59,7 @@ Vector3f PlayerControl::dirFromGamepad() {
 Vector3f PlayerControl::dirFromKeyboard() {
     Vector3f dir;
 
-    float camera_y = mainCamera->transform()->getLocalRotation().y;
+    float camera_y = mainCamera->transform()->getLocalRotation().toEuler().y;
 
     if(Input::Get()->isButtonHold(ButtonCode::W)) {
         dir += Vector3f::Forward;
@@ -63,7 +73,17 @@ Vector3f PlayerControl::dirFromKeyboard() {
     if(Input::Get()->isButtonHold(ButtonCode::D)) {
         dir += Vector3f::Right;
     }
-    if(Input::Get()->isButtonHold(ButtonCode::Space)) {
+    if (Input::Get()->isButtonHold(ButtonCode::D) ||
+        Input::Get()->isButtonHold(ButtonCode::S) ||
+        Input::Get()->isButtonHold(ButtonCode::A) ||
+        Input::Get()->isButtonHold(ButtonCode::W)) {
+        mThirdCamera->isCanControlDirection(true);
+    }
+    else
+    {
+        mThirdCamera->isCanControlDirection(false);
+    }
+    /*if(Input::Get()->isButtonHold(ButtonCode::Space)) {
         dir += Vector3f::Up;
     }
     if(Input::Get()->isButtonHold(ButtonCode::LCtrl)) {
@@ -71,7 +91,7 @@ Vector3f PlayerControl::dirFromKeyboard() {
     }
     if(Input::Get()->isButtonHold(ButtonCode::RCtrl)) {
         dir += Vector3f::Down;
-    }
+    }*/
 
     dir = Quaternion::Euler(0.0f, camera_y, 0.0f) * dir;
 
