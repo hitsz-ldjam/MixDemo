@@ -1,86 +1,80 @@
 #pragma once
-
-#include "../Mx/Component/Script/MxScript.h"
-#include "../Mx/GameObject/MxGameObject.h"
-#include "../Mx/Math/MxVector.h"
-#include "../Mx/Utils/MxEvent.h"
-#include "../MxApplicationBase.h"
+#include "../../../../Mx/Component/Script/MxScript.h"
+#include "../../../../Mx/Math/MxVector3.h"
 
 
+using namespace Mix;
 
-	using namespace Mix;
+class PlayerAdapter;
 
-	class  PlayerAdapter;
+class ThirdCamera final : public Script {
+MX_DECLARE_RTTI;
+public:
+    ThirdCamera(HGameObject _CameraPivot)
+        : CameraPivot(std::move(_CameraPivot)) { };
 
-	class ThirdCamera final:public Script{
-		MX_DECLARE_RTTI;
-	public:
-		ThirdCamera(HGameObject _CameraPivot) 
-			:CameraPivot(std::move(_CameraPivot)) {
-		};
+    ~ThirdCamera() = default ;
 
-		~ThirdCamera() = default ;
+    void setfreeDistance(float _freeDistance);
 
-		void setfreeDistance(float _freeDistance);
+    void setminDistance(float _minDistance);
 
-		void setminDistance(float _minDistance);
+    void setmaxDistance(float _maxDistance);
 
-		void setmaxDistance(float _maxDistance);
+    void iscanControlDistance(bool _canControlDistance);
 
-		void iscanControlDistance(bool _canControlDistance);
+    void setdistanceSpeed(float _distanceSpeed);
 
-		void setdistanceSpeed(float _distanceSpeed);
+    void setrotateSpeed(float _rotateSpeed);
 
-		void setrotateSpeed(float _rotateSpeed);
+    void setTargetBodyRotateLerp(float _TargetBodyRotateLerp);
 
-		void setTargetBodyRotateLerp(float _TargetBodyRotateLerp);
+    void isCanControlDirection(bool _CanControlDirection);
 
-		void isCanControlDirection(bool _CanControlDirection);
+    void setmaxDepression(float _maxDepression);
 
-		void setmaxDepression(float _maxDepression);
+    void setmaxEvelation(float _maxEvelation);
 
-		void setmaxEvelation(float _maxEvelation);
+    float Clamp(float _clamp, float _x, float _y);
 
-		float Clamp(float _clamp, float _x, float _y);
+private:
 
-	private:
+    float freeDistance = 5.0f;
 
-		float freeDistance = 5.0f;
+    float minDistance = 2.5f;
 
-		float minDistance = 2.5f;
+    float maxDistance = 6.0f;
 
-		float maxDistance = 6.0f;
+    bool canControlDistance = true;
 
-		bool canControlDistance = true;
+    float distanceSpeed = 1.0f;
 
-		float distanceSpeed = 1.0f;
+    float rotateSpeed = .01f;
 
-		float rotateSpeed = .01f;
+    float TargetBodyRotateLerp = 0.3f;
 
-		float TargetBodyRotateLerp = 0.3f;
+    HGameObject CameraPivot;
 
-		HGameObject CameraPivot;
+    bool CanControlDirection = false;
 
-		bool CanControlDirection = false;
+    Vector3f PredictCameraPosition;
 
-		Vector3f PredictCameraPosition;
+    Vector3f offset;
 
-		Vector3f offset;
+    float maxDepression = 8.0f;
 
-		float maxDepression = 8.0f;
+    float maxEvelation = 8.0f;
 
-		float maxEvelation = 8.0f;
+    void start() override;
 
-		void start() override;
+    void update() override;
 
-		void update() override;
+    void fixedUpdate() override;
 
-		void fixedUpdate() override;
+    void FreeCamera();
 
-		void  FreeCamera();
+    SceneObjectHandle<PlayerAdapter> mAdapter;
 
-		SceneObjectHandle<PlayerAdapter> mAdapter;
+};
 
-	};
-	using HThirdCamera = SceneObjectHandle<ThirdCamera>;
-
+using HThirdCamera = SceneObjectHandle<ThirdCamera>;

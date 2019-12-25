@@ -10,6 +10,8 @@
 #include "Assets/Scripts/GameMgr.h"
 #include "Assets/Scripts/Utils/DmPool.h"
 #include "Assets/Scripts/Utils/SimpleMaterials.h"
+#include "Assets/Scripts/Control/ThirdCamera.h"
+#include "Assets/Scripts/Control/PlayerControl.h"
 
 std::string TestDemo::getAppName() const { return std::string("TestDemo"); }
 
@@ -59,5 +61,10 @@ void TestDemo::onMainSceneCreated() {
 
     // camera
     auto camera = SceneManager::Get()->getActiveScene()->getMainCamera()->getGameObject();
-    camera->addComponent<CameraCtrl>(player);
+    //camera->addComponent<CameraCtrl>(player);
+
+    camera->transform().setPosition({0, 0, -20});
+    camera->addComponent<ThirdCamera>(player);
+    player->addComponent<PlayerAdapter>();
+    player->addComponent<PlayerControl>(camera->getComponent<Camera>());
 }
