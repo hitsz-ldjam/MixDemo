@@ -3,17 +3,17 @@
 #include "../Mx/Component/Camera/MxCamera.h"
 #include "../Mx/Log/MxLog.h"
 #include "../Mx/Window/MxWindow.h"
+#include "../Mx/Math/MxQuaternion.h"
 #include "PlayerAdapter.h"
 #include "../Mx/Math/MxMath.h"
 
-namespace Scripts {
 	MX_IMPLEMENT_RTTI(ThirdCamera, Script);
 
 	void ThirdCamera::start() {
 
-		mAdapter = mGameObject->getComponent<ThirdCamera>;
+		mAdapter = mGameObject->getComponent<PlayerAdapter>();
 		
-		offset = transform()->getPosition - CameraPivot->transform.position;
+		offset = transform()->getPosition() - CameraPivot->transform().getPosition();
 	}
 
 	void ThirdCamera::update() {
@@ -26,11 +26,12 @@ namespace Scripts {
 	void ThirdCamera::FreeCamera() {
 		offset = offset.normalize() * freeDistance;
 
-		transform()->setPosition = Vector3f::Lerp(transform()->getPosition, CameraPivot->transform.position + offset, 1.0f);
+		transform()->setPosition( Vector3f::Lerp(transform()->getPosition(), CameraPivot->transform().getPosition() + offset, 1.0f ));
 
 		if (CanControlDirection) {
-			Quaternion TargetBodyCurrentRotation = CameraPivot->transform.rotation;
-			CameraPivot->transform.rotation = Quaternion().lerp(Quaternion().Euler(Vector3f(CameraPivot->transform.localEulerAngles.x, transform()->getLocalRotation().Euler.y , CameraPivot->transform.localEulerAngles.z)), TargetBodyRotateLerp);
+			Quaternion TargetBodyCurrentRotation = CameraPivot->transform().getRotation();
+		    
+			CameraPivot->transform().rotate(Quaternion().Euler(Vector3f(CameraPivot->transform().getLocalRotation().x, transform()->getLocalRotation().y , CameraPivot->transform().getLocalRotation().z)));
 		}
 
 		if (canControlDistance)
@@ -41,35 +42,83 @@ namespace Scripts {
 			//}
 			freeDistance -= ScrollWheel * distanceSpeed;
 		}
-		freeDistance = mAdapter->Clamp(freeDistance, minDistance, maxDistance);
 
-		transform()->lookAt(CameraPivot->transform.position);
+		transform()->lookAt(CameraPivot->transform().getPosition());
 
-		float eulerX = transform()->getLocalRotation().Euler.x;
-		float inputY = Input::Get()->getMousePosition().y;
+		float eulerX = transform()->getLocalRotation().x;
+		float inputY = Input::Get()->getMousePositionDelta().y;
 
-		transform()->rotateAround(CameraPivot->transform.position, Vector3f::Up, rotateSpeed * Input::Get()->getMousePosition().x);
+		transform()->rotateAround(CameraPivot->transform().getPosition(), Vector3f::Up, rotateSpeed * Input::Get()->getMousePositionDelta().x);
 
 		if (eulerX > maxDepression&& eulerX < 90)
 		{
 			if (inputY > 0)
-				transform()->rotateAround(CameraPivot->transform.position, Vector3f::Right, -rotateSpeed * inputY);
+				transform()->rotateAround(CameraPivot->transform().getPosition(), Vector3f::Right, -rotateSpeed * inputY);
 		}
 		else if (eulerX < 360 - maxEvelation && eulerX > 270)
 		{
 			if (inputY < 0)
-				transform()->rotateAround(CameraPivot->transform.position, Vector3f::Right, -rotateSpeed * inputY);
+				transform()->rotateAround(CameraPivot->transform().getPosition(), Vector3f::Right, -rotateSpeed * inputY);
 		}
 		else
 		{
 
-			transform()->rotateAround(CameraPivot->transform.position, Vector3f::Right, -rotateSpeed * inputY);
+			transform()->rotateAround(CameraPivot->transform().getPosition(), Vector3f::Right, -rotateSpeed * inputY);
 
 		}
 
-		offset = transform()->getPosition - CameraPivot->transform.position;
+		offset = transform()->getPosition() - CameraPivot->transform().getPosition();
 		offset = offset.normalize() * freeDistance;
-		transform()->setPosition = CameraPivot->transform.position + offset;
+		transform()->setPosition (CameraPivot->transform().getPosition() + offset);
 	}
 
-}
+	float ThirdCamera::Clamp(float _clamp, float _x, float _y) {
+		if (_clamp < _x) {
+			return _x;
+		}
+		if (_clamp > _y) {
+			return _y;
+		}
+	}
+
+	void ThirdCamera::setfreeDistance(float _freeDistance) {
+		freeDistance = _freeDistance;
+	}
+
+	void ThirdCamera::setminDistance(float _minDistance) {
+		minDistance = _minDistance;
+	}
+
+	void ThirdCamera::setmaxDistance(float _maxDistance) {
+		maxDistance = _maxDistance;
+	}
+
+	void ThirdCamera::iscanControlDistance(bool _canControlDistance) {
+		canControlDistance = _canControlDistance;
+	}
+
+	void ThirdCamera::setdistanceSpeed(float _distanceSpeed) {
+		distanceSpeed = _distanceSpeed;
+	}
+
+	void ThirdCamera::setrotateSpeed(float _rotateSpeed) {
+		rotateSpeed = _rotateSpeed;
+	}
+
+	void ThirdCamera::setTargetBodyRotateLerp(float _TargetBodyRotateLerp) {
+		TargetBodyRotateLerp = _TargetBodyRotateLerp;
+	}
+
+	void ThirdCamera::isCanControlDirection(bool _CanControlDirection) {
+		CanControlDirection = _CanControlDirection;
+	}
+
+	void ThirdCamera::setmaxDepression(float _maxDepression) {
+		maxDepression = _maxDepression;
+	}
+
+	void ThirdCamera::setmaxEvelation(float _maxEvelation) {
+		maxEvelation = _maxEvelation;
+	}
+
+

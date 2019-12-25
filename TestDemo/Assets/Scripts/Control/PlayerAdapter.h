@@ -4,21 +4,22 @@
 #include "../Mx/Math/MxVector.h"
 #include "../Mx/Utils/MxEvent.h"
 
-namespace Scripts {
+
 	using namespace Mix;
 
 	class PlayerAdapter : public Script {
 		MX_DECLARE_RTTI;
 	public:
+		PlayerAdapter() = default;
 		~PlayerAdapter() = default;
 
 		void move(const Vector3f& _dir);
 
 		void attack();
 
-		void setMoveSpeed(float _speed);
+		void setHMoveSpeed(float _Hspeed);
 
-		float Clamp(float _clamp, float _x, float _y);
+		void setLMoveSpeed(float _Lspeed);
 
 	private:
 		void awake() override;
@@ -29,10 +30,12 @@ namespace Scripts {
 
 		void fixedUpdate() override;
 
-		float mMoveSpeed = 0.5f;
+		float mHMoveSpeed = 0.5f;
+		float mLMoveSpeed = 0.5f;
 		float mAccelerate = 0.5f;
 		float mDecelerate = 0.5f;
 		Vector3f mSmoothMove;
 
 	};
-}
+
+	using HPlayerAdapter = SceneObjectHandle<PlayerAdapter>;

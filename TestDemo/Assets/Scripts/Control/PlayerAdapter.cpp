@@ -5,11 +5,16 @@
 #include "../Mx/Window/MxWindow.h"
 #include "PlayerAdapter.h"
 
-namespace Scripts {
+
 	MX_IMPLEMENT_RTTI(PlayerAdapter, Script);
 
 	void PlayerAdapter::move(const Vector3f& _dir) {
 		auto moveDir = _dir.length() > 0.0f ? _dir.normalize() : Vector3f::Zero;
+		float mMoveSpeed = mHMoveSpeed;
+
+		if (Input::Get()->isButtonHold(ButtonCode::RShift)|| Input::Get()->isButtonHold(ButtonCode::LShift) ){
+			mMoveSpeed = mLMoveSpeed;
+		}
 
 		mSmoothMove = Vector3f::Lerp(mSmoothMove, moveDir * mMoveSpeed, mAccelerate);
 		mSmoothMove = Vector3f::Lerp(mSmoothMove, Vector3f::Zero, mDecelerate);
@@ -19,14 +24,7 @@ namespace Scripts {
 
 	}
 
-	float Clamp(float _clamp, float _x, float _y) {
-		if (_clamp < _x) {
-			return _x;
-		}
-		if (_clamp > _y) {
-			return _y;
-		}
-	}
+
 
 	void PlayerAdapter::attack() {
 		//auto weapon = mGameObject->getComponent<...>();
@@ -34,8 +32,12 @@ namespace Scripts {
 		//	weapon->attack();
 	}
 
-	void PlayerAdapter::setMoveSpeed(float _speed) {
-		mMoveSpeed = _speed;
+	void PlayerAdapter::setHMoveSpeed(float _Hspeed) {
+		mHMoveSpeed = _Hspeed;
+	}
+
+	void PlayerAdapter::setLMoveSpeed(float _Lspeed) {
+		mLMoveSpeed = _Lspeed;
 	}
 
 	void PlayerAdapter::awake() {
@@ -49,4 +51,3 @@ namespace Scripts {
 
 	void PlayerAdapter::fixedUpdate() {
 	}
-}

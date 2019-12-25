@@ -1,14 +1,15 @@
 #include "PlayerControll.h"
+
 #include "../Mx/Input/MxInput.h"
 #include "../Mx/Component/Camera/MxCamera.h"
 #include "../Mx/Window/MxWindow.h"
 #include "PlayerAdapter.h"
 
-namespace Scripts {
-	MX_IMPLEMENT_RTTI(PlayerControll, Script);
 
+	MX_IMPLEMENT_RTTI(PlayerControll, Script);
+	
 	void PlayerControll::start() {
-		mAdapter = mGameObject->getComponent<PlayerControll>;
+		mAdapter = mGameObject->getComponent<PlayerAdapter>();
 		auto mainCamera = SceneManager::Get()->getActiveScene()->getMainCamera();
 	}
 	void PlayerControll::update() {
@@ -27,7 +28,9 @@ namespace Scripts {
 
 	Vector3f PlayerControll::dirFromGamepad() {
 		auto dir2f = Input::Get()->getGamepadLeftStickAxis();
-		float camera_y = mainCamera->transform()->getRotation().Euler.y;
+
+		float camera_y = mainCamera->transform()->getLocalRotation().y;
+
 		Vector3f dirh;
 		if (Input::Get()->isButtonHold(ButtonCode::Gamepad_X)) {
 			dirh += Vector3f::Up;
@@ -38,13 +41,16 @@ namespace Scripts {
 		auto dir = Vector3f(dir2f.x, dirh.y, dir2f.y);
 
 		dir = Quaternion().Euler(0.0f, camera_y, 0.0f) *  dir;
+		transform()->setRotation(Quaternion().Euler(0.0f, camera_y, 0.0f));
 
 		return !(dir.length() > 0.0f) ? Vector3f::Zero : dir.normalize();
 	}
 
 	Vector3f PlayerControll::dirFromKeyboard() {
 		Vector3f dir;
-		float camera_y = mainCamera->transform()->getRotation().Euler.y;
+
+		float camera_y = mainCamera->transform()->getLocalRotation().y;
+
 		if (Input::Get()->isButtonHold(ButtonCode::W)) {
 			dir += Vector3f::Forward;
 		}
@@ -68,7 +74,7 @@ namespace Scripts {
 		}
 
 		dir = Quaternion().Euler(0.0f, camera_y, 0.0f) * dir;
+		transform()->setRotation(Quaternion().Euler(0.0f, camera_y, 0.0f));
 
 		return dir.length() > 0.0f ? dir.normalize() : Vector3f::Zero;
 	}
-}

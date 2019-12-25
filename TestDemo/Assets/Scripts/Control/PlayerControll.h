@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef PLAYERCONTROLL_H_
-#define PLAYERCONTROLL_H_
-
 #include "../Mx/Component/Script/MxScript.h"
 #include "../Mx/GameObject/MxGameObject.h"
 #include "../Mx/Component/Camera/MxCamera.h"
@@ -12,7 +9,7 @@
 #include "../MxApplicationBase.h"
 
 
-namespace Scripts {
+
 	using namespace Mix;
 
 	class  PlayerAdapter;
@@ -20,6 +17,9 @@ namespace Scripts {
 	class PlayerControll:public Script {
 		MX_DECLARE_RTTI;
 		public:
+			PlayerControll(HCamera _Hcamera)
+				:mainCamera(std::move(_Hcamera)) {
+			}
 			~PlayerControll() = default;
 
 		private:
@@ -36,9 +36,8 @@ namespace Scripts {
 			Vector3f dirFromKeyboard();
 
 			SceneObjectHandle<PlayerAdapter> mAdapter;
-			
+
 			HCamera mainCamera;
-			
+
 	};
-}
-#endif
+	using HPlayerControll = SceneObjectHandle<PlayerControll>;
