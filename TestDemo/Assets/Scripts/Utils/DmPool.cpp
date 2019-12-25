@@ -29,7 +29,10 @@ HGameObject DmPool::createDm() {
     return pool.back();
 }
 
-void DmPool::destoryDm(HGameObject _dm) {
+void DmPool::destoryDm(const HGameObject& _dm) {
     //std::find
+    auto scrps = _dm->getComponents<Script>();
+    for(auto& scrp : scrps)
+        _dm->removeComponent(static_scene_object_cast<Component>(scrp));
     _dm->setActive(false);
 }

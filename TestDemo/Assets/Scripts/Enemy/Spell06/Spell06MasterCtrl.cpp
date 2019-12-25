@@ -23,7 +23,7 @@ void Spell06MasterCtrl::start() {
 void Spell06MasterCtrl::update() {}
 
 void Spell06MasterCtrl::shootBlueSphereImpl() {
-    auto ctrl = GameObject::Instantiate("BlueSphereCtrl");
+    auto ctrl = GameObject::Instantiate("BlueSphereMasterCtrl");
     auto ec1 = ctrl->addComponent<DmStraightExpandCtrl>(3, 12, 3, 162);
     auto ec2 = ctrl->addComponent<DmStraightExpandCtrl>(3, 6, 3, 162);
     auto ec3 = ctrl->addComponent<DmStraightExpandCtrl>(3, 3, 3, 162);

@@ -24,7 +24,7 @@ public:
 
     HGameObject createDm();
 
-    void destoryDm(HGameObject _dm);
+    void destoryDm(const HGameObject& _dm);
 
 private:
     std::vector<HGameObject> pool;

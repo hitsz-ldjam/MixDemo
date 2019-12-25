@@ -3,6 +3,7 @@
 #include "../Mx/Scene/MxScene.h"
 #include "../Mx/Scene/MxSceneManager.h"
 #include "../Mx/Component/Camera/MxCamera.h"
+#include "../ThirdPartyLibs/imgui/imgui.h"
 
 #include "Assets/Scripts/Prefabs/PrefabUilts.h"
 #include "Assets/Scripts/Prefabs/Prefab.h"
@@ -13,6 +14,10 @@
 #include "Assets/Scripts/Control/ThirdCamera.h"
 #include "Assets/Scripts/Control/PlayerControl.h"
 
+// test codes
+#include "../Mx/Resource/MxResourceLoader.h"
+#include "../Mx/Graphics/Texture/MxTexture.h"
+
 std::string TestDemo::getAppName() const { return std::string("TestDemo"); }
 
 Version TestDemo::getAppVersion() const { return Version(1, 0, 0); }
@@ -22,6 +27,7 @@ void TestDemo::onMainSceneCreated() {
     SimpleMaterials::Init();
 
     // prefabs
+    auto ballPrefab = std::make_shared<Prefab2>("TestDemo/Assets/Models/ball/ball_0.3_smooth.gltf", TexturePaths{});
     auto bigballPrefab = std::make_shared<Prefab2>("TestDemo/Assets/Models/bigball/BigBall.gltf", TexturePaths{});
 
     // player
@@ -56,8 +62,12 @@ void TestDemo::onMainSceneCreated() {
 
     // GameMgr
     auto gameMgr = GameObject::Instantiate("GameMgr");
+    auto ballPool = gameMgr->addComponent<DmPool>(ballPrefab, "", "ball", 1000);
     auto bigballPool = gameMgr->addComponent<DmPool>(bigballPrefab, "", "bigball", 1000);
-    gameMgr->addComponent<GameMgr>(player, enemy, bigballPool);
+    gameMgr->addComponent<GameMgr>(player,
+                                   enemy,
+                                   ballPool,
+                                   bigballPool);
 
     // camera
     auto camera = SceneManager::Get()->getActiveScene()->getMainCamera()->getGameObject();
@@ -67,4 +77,13 @@ void TestDemo::onMainSceneCreated() {
     camera->addComponent<ThirdCamera>(player);
     player->addComponent<PlayerAdapter>();
     player->addComponent<PlayerControl>(camera->getComponent<Camera>());
+}
+
+void TestDemo::onGUI() {
+    //auto img = ResourceLoader::Get()->load<Texture2D>("TestDemo/Assets/Figure/reimu/reimu_yuyu.png");
+    //{
+    //    ImGui::Begin("test");
+    //    ImGui::Image((void*)img->getID(), ImVec2(img->width(), img->height()));
+    //    ImGui::End();
+    //}
 }

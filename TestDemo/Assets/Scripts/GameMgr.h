@@ -14,6 +14,7 @@ public:
 
     GameMgr(HGameObject _player,
             HGameObject _enemy,
+            HDmPool _ballPool,
             HDmPool _bigballPool);
 
 private:
@@ -21,7 +22,7 @@ private:
     void update() override;
 
     HGameObject player, enemy;
-    HDmPool bigballPool;
+    HDmPool ballPool, bigballPool;
 };
 
 using HGameMgr = SceneObjectHandle<GameMgr>;

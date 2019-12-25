@@ -36,7 +36,6 @@ void ShootSphere::Shoot(const SphereType _type,
         dm->transform().setPosition(_pos);
 
         Vector3 forward(data[i - 2], data[i - 1], data[i]);
-        // ???
         dm->transform().setRotation(_rot * Quaternion::LookRotation(forward));
 
         _setup(dm);

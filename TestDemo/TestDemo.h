@@ -14,6 +14,7 @@ public:
 
 private:
     void onMainSceneCreated() override;
+    void onGUI() override;
 };
 
 #endif
