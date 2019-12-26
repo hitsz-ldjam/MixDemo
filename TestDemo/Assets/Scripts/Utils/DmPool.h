@@ -24,10 +24,15 @@ public:
 
     HGameObject createDm();
 
+    // should only be called in Update()
     void destoryDm(const HGameObject& _dm);
 
 private:
-    std::vector<HGameObject> pool;
+    void lateUpdate() override;
+
+    std::vector<HGameObject> available, toDestory;
+    size_t iterCache;
+
     std::shared_ptr<Prefab2> dmPrefab;
     std::string name;
     Tag tag;

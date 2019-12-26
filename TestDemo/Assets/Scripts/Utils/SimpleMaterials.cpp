@@ -5,6 +5,7 @@
 std::shared_ptr<Material> SimpleMaterials::whiteMat,
                           SimpleMaterials::redMat,
                           SimpleMaterials::yellowMat,
+                          SimpleMaterials::greenMat,
                           SimpleMaterials::cyanMat,
                           SimpleMaterials::blueMat,
                           SimpleMaterials::purpleMat;
@@ -13,9 +14,10 @@ void SimpleMaterials::Init() {
     whiteMat = MatOfColor(Color::White);
     redMat = MatOfColor(Color::Red);
     yellowMat = MatOfColor(Color::Yellow);
+    greenMat = MatOfColor(Color::Green);
     cyanMat = MatOfColor(Color::Cyan);
     blueMat = MatOfColor(Color::Blue);
-    purpleMat = MatOfColor(Color(1, 0, 1, 1));
+    purpleMat = MatOfColor(Color(1, 0.4, 1, 1));
 }
 
 std::shared_ptr<Material> SimpleMaterials::MatOfColor(const Color& _color) {

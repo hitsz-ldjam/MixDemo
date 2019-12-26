@@ -13,6 +13,8 @@
 #include "Assets/Scripts/Utils/SimpleMaterials.h"
 #include "Assets/Scripts/Control/ThirdCamera.h"
 #include "Assets/Scripts/Control/PlayerControl.h"
+#include "Assets/Scripts/StateMachine/StateMachine.h"
+#include "Assets/Scripts/Player/BombCtrl.h"
 
 // test codes
 #include "../Mx/Resource/MxResourceLoader.h"
@@ -29,6 +31,9 @@ void TestDemo::onMainSceneCreated() {
     // prefabs
     auto ballPrefab = std::make_shared<Prefab2>("TestDemo/Assets/Models/ball/ball_0.3_smooth.gltf", TexturePaths{});
     auto bigballPrefab = std::make_shared<Prefab2>("TestDemo/Assets/Models/bigball/BigBall.gltf", TexturePaths{});
+
+    // GameMgr
+    auto gameMgr = GameObject::Instantiate("GameMgr");
 
     // player
     auto player = GameObject::Instantiate("player", "player");
@@ -60,8 +65,14 @@ void TestDemo::onMainSceneCreated() {
     enemy->transform().setPosition({0, 0, 25});
     enemy->transform().rotate({0, 1, 0}, -Math::Constants::Pi);
 
-    // GameMgr
-    auto gameMgr = GameObject::Instantiate("GameMgr");
+    StateMachine::player = player;
+    StateMachine::enemy = enemy;
+
+    // camera
+    auto camera = SceneManager::Get()->getActiveScene()->getMainCamera()->getGameObject();
+    camera->transform().setPosition({0, 0, -20});
+
+    // addComponents;
     auto ballPool = gameMgr->addComponent<DmPool>(ballPrefab, "", "ball", 1000);
     auto bigballPool = gameMgr->addComponent<DmPool>(bigballPrefab, "", "bigball", 1000);
     gameMgr->addComponent<GameMgr>(player,
@@ -69,12 +80,13 @@ void TestDemo::onMainSceneCreated() {
                                    ballPool,
                                    bigballPool);
 
-    // camera
-    auto camera = SceneManager::Get()->getActiveScene()->getMainCamera()->getGameObject();
     //camera->addComponent<CameraCtrl>(player);
-
-    camera->transform().setPosition({0, 0, -20});
     camera->addComponent<ThirdCamera>(player);
+
+    // todo
+    //player->addComponent<AudioSource>();
+    player->addComponent<BombCtrl>(bigballPool);
+    // ...
     player->addComponent<PlayerAdapter>();
     player->addComponent<PlayerControl>(camera->getComponent<Camera>());
 }

@@ -23,6 +23,19 @@ private:
 
     HGameObject player, enemy;
     HDmPool ballPool, bigballPool;
+
+    enum class State {
+        Dead,
+        Spell1Start,
+        Spell1Con,
+        Spell1End,
+        Spell3Start,
+        Spell3Con,
+        Spell3End,
+        Spell6Start,
+        Spell6Con,
+        Spell6End,
+    } state = State::Dead;
 };
 
 using HGameMgr = SceneObjectHandle<GameMgr>;

@@ -33,9 +33,7 @@ private:
         Forward,
         Backward,
         Die
-    };
-
-    State state;
+    } state = State::Dead;
     float vel, acc;
     std::vector<HGameObject> dmList;
 };

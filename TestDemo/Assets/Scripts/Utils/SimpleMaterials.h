@@ -16,6 +16,7 @@ public:
     static auto White() noexcept { return whiteMat; }
     static auto Red() noexcept { return redMat; }
     static auto Yellow() noexcept { return yellowMat; }
+    static auto Green() noexcept { return greenMat; }
     static auto Cyan() noexcept { return cyanMat; }
     static auto Blue() noexcept { return blueMat; }
     static auto Purple() noexcept { return purpleMat; }
@@ -24,6 +25,7 @@ private:
     static std::shared_ptr<Material> whiteMat,
                                      redMat,
                                      yellowMat,
+                                     greenMat,
                                      cyanMat,
                                      blueMat,
                                      purpleMat;

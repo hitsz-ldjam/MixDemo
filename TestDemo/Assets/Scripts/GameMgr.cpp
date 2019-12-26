@@ -4,8 +4,6 @@
 #include "Enemy/Spell06/Spell06MasterCtrl.h"
 #include "Enemy/Spell03/Spell03BlueSphere.h"
 #include "Enemy/Spell03/Spell03SwTail.h"
-#include "Enemy/Spell12/Spell12MasterCtrl.h"
-#include "Enemy/Spell14/Spell14MasterCtrl.h"
 
 MX_IMPLEMENT_RTTI(GameMgr, Script)
 
@@ -20,11 +18,49 @@ GameMgr::GameMgr(HGameObject _player,
 
 void GameMgr::start() {
     // todo: state machine
-    //enemy->addComponent<Spell06MasterCtrl>(bigballPool);
-    //enemy->addComponent<Spell03BlueSphere>(player, bigballPool);
-    //enemy->addComponent<Spell03SwTail>(player, ballPool);
-    //enemy->addComponent<Spell12MasterCtrl>(player, bigballPool, ballPool);
-    enemy->addComponent<Spell14MasterCtrl>(player, bigballPool, ballPool);
+    enemy->addComponent<Spell06MasterCtrl>(bigballPool);
 }
 
-void GameMgr::update() { }
+void GameMgr::update() {
+    static bool posedge = false;
+    return;
+
+    //switch(state) {
+    //    case State::Dead:
+    //        break;
+
+    //    case State::Spell1Start:
+    //        break;
+    //    case State::Spell1Con: break;
+    //    case State::Spell1End: break;
+
+    //    case State::Spell3Start:
+    //    {
+    //        enemy->addComponent<Spell03BlueSphere>(player, bigballPool);
+    //        enemy->addComponent<Spell03SwTail>(player, ballPool);
+    //        state = State::Spell3Con;
+    //        break;
+    //    }
+
+    //    case State::Spell3Con:
+    //    {
+    //        //state = State::Spell3End;
+    //        break;
+    //    }
+
+    //    case State::Spell3End:
+    //    {
+    //        enemy->removeComponent<Spell03BlueSphere>(player, bigballPool);
+    //        enemy->addComponent<Spell03SwTail>(player, ballPool);
+    //    }
+    //    break;
+
+    //    case State::Spell6Start: break;
+
+    //    case State::Spell6Con: break;
+
+    //    case State::Spell6End: break;
+
+    //    default: ;
+    //}
+}
