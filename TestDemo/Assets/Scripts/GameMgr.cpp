@@ -5,6 +5,7 @@
 #include "Enemy/Spell03/Spell03BlueSphere.h"
 #include "Enemy/Spell03/Spell03SwTail.h"
 #include "Enemy/Spell12/Spell12MasterCtrl.h"
+#include "Enemy/Spell14/Spell14MasterCtrl.h"
 
 MX_IMPLEMENT_RTTI(GameMgr, Script)
 
@@ -22,7 +23,8 @@ void GameMgr::start() {
     //enemy->addComponent<Spell06MasterCtrl>(bigballPool);
     //enemy->addComponent<Spell03BlueSphere>(player, bigballPool);
     //enemy->addComponent<Spell03SwTail>(player, ballPool);
-    enemy->addComponent<Spell12MasterCtrl>(player, bigballPool, ballPool);
+    //enemy->addComponent<Spell12MasterCtrl>(player, bigballPool, ballPool);
+    enemy->addComponent<Spell14MasterCtrl>(player, bigballPool, ballPool);
 }
 
 void GameMgr::update() { }

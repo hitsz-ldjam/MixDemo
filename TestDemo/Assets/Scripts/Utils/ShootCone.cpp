@@ -3,7 +3,10 @@
 #include <random>
 #include "../../../../Mx/Time/MxTime.h"
 
-std::default_random_engine e;
+int times = Time::RealTime();
+
+std::default_random_engine e (times);
+
 std::uniform_int_distribution<int> u(0, 291);
 
 void ShootCone::Shoot( 
@@ -23,3 +26,4 @@ void ShootCone::Shoot(
      _setup(dm);
     
 }
+
