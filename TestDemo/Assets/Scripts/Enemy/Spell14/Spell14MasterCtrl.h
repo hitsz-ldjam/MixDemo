@@ -12,6 +12,7 @@ public:
     ~Spell14MasterCtrl() = default;
 
     Spell14MasterCtrl(HGameObject _player,
+        HGameObject _enemy,
         HDmPool _pool,
         HDmPool _spool);
 
@@ -25,9 +26,10 @@ private:
     void shootConeImpl1();
     void shootConeImpl2();
 
-    unsigned int ShootTimes = 3;
-    unsigned int ShootCone = 60;
+    unsigned int ShootTimes = 10;
+    unsigned int ShootCone = 1;
 
+    HGameObject enemy;
     HGameObject player;
     HDmPool bigballPool;
     HDmPool ballPool;

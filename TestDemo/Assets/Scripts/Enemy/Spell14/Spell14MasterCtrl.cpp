@@ -13,25 +13,27 @@
 MX_IMPLEMENT_RTTI(Spell14MasterCtrl, Script)
 
 Spell14MasterCtrl::Spell14MasterCtrl(HGameObject _player,
+    HGameObject _enemy,
     HDmPool _bigballPool,
     HDmPool _ballPool)
     : player(std::move(_player)),
+    enemy(std::move(_enemy)),
     bigballPool(std::move(_bigballPool)),
     ballPool(std::move(_ballPool)) {}
 
 void Spell14MasterCtrl::start() {
     Coroutine::startCoroutine([](MX_YIELD_HANDLE, Spell14MasterCtrl* _this) {
         for (int j = 0; j < _this->ShootTimes; j++) {
-            for (int i = 0; i < _this->ShootCone; i++) {
-                _this->shootConeImpl1(); 
-                yield_return(new Coroutine::WaitForSeconds(.02));
+            for (int i = 0 ; i < _this->ShootCone; i++) {
+                _this->shootConeImpl1();
+                yield_return(new Coroutine::WaitForSeconds(.2));
                 _this->shootConeImpl2();
-                yield_return(new Coroutine::WaitForSeconds(.02));
+                yield_return(new Coroutine::WaitForSeconds(.2));
             }
             auto ctrl = GameObject::Instantiate("BlueSphereMasterCtrl");
-            auto ec = ctrl->addComponent<DmStraightMoveCtrl>(6);
+            auto ec = ctrl->addComponent<DmStraightMoveCtrl>(8);
 
-            ShootSphere::Shoot(ShootSphere::SphereType::Verts_162,
+            ShootSphere::Shoot(ShootSphere::SphereType::Verts_42,
                 _this->bigballPool,
                 _this->transform()->getPosition(),
                 _this->transform()->getRotation(),
@@ -39,8 +41,8 @@ void Spell14MasterCtrl::start() {
                     _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Blue());
                     ec->add(_dm);
                 });
-
-            yield_return(new Coroutine::WaitForSeconds(3));
+                
+            yield_return(new Coroutine::WaitForSeconds(4));
         }
         }, this);
 }
@@ -48,22 +50,32 @@ void Spell14MasterCtrl::start() {
 void Spell14MasterCtrl::update() {}
 
 void Spell14MasterCtrl::shootConeImpl1() {
-    auto ctrl = GameObject::Instantiate("BlueSphereCtrl");
-    auto ball1 = ctrl->addComponent<DmConeExpandCtrl>(8, 12, player->transform().getPosition(), 1.5, 162);
-    ShootCone::Shoot(ballPool,
+    auto ctrl = GameObject::Instantiate("YellowSphereCtrl");
+    auto ball1 = ctrl->addComponent<DmConeExpandCtrl>(12, 16, player->transform().getPosition(), 1, 162);
+    Vector3f locForward = enemy->transform().getPosition();
+    Vector3f conePos = player->transform().getPosition();
+    ShootCone::Shoot3(24,
+        ballPool,
         transform()->getPosition(),
+        conePos,
+        locForward,
         transform()->getRotation(),
         [&ec = ball1](const HGameObject& _dm) {
-            _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Blue());
+            _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Yellow());
             ec->add(_dm);
         });
 
 }
 void Spell14MasterCtrl::shootConeImpl2() {
     auto ctrl = GameObject::Instantiate("PurpleSphereCtrl");
-    auto ball1 = ctrl->addComponent<DmStraightExpandCtrl>(3, 12, 3, 162);
-    ShootCone::Shoot(ballPool,
+    auto ball1 = ctrl->addComponent<DmStraightExpandCtrl>(10, 14, 1.5, 162);
+    Vector3f locForward =enemy->transform().getPosition();
+    Vector3f conePos = player->transform().getPosition();
+    ShootCone::Shoot2(24,
+        ballPool,
         transform()->getPosition(),
+        conePos,
+        locForward,
         transform()->getRotation(),
         [&ec = ball1](const HGameObject& _dm) {
             _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Purple());

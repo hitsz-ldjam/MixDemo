@@ -26,9 +26,9 @@ void DmConeExpandCtrl::start() {
         _this->speed = 0;
         for (const auto& dm : _this->dmList) {
             auto& trans = dm->transform();
-            trans.transform()->lookAt(_this->PlayerPos);
+            trans.transform()->lookAt(_this->PlayerPos + Vector3f::Up);
         }
-        yield_return(new Coroutine::WaitForSeconds(0.2));
+        //yield_return(new Coroutine::WaitForSeconds(0.2));
         _this->speed = _this->speedExpand;
         }, this);
 }
