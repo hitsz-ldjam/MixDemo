@@ -16,7 +16,7 @@ void PlayerAdapter::move(const Vector3f& _dir) {
 
     mSmoothMove = Vector3f::Lerp(mSmoothMove, moveDir * mMoveSpeed, mAccelerate);
     mSmoothMove = Vector3f::Lerp(mSmoothMove, Vector3f::Zero, mDecelerate);
-    transform()->translate(mSmoothMove.x, mSmoothMove.y, mSmoothMove.z, Space::World);
+    transform()->translate(mSmoothMove.x, mSmoothMove.y, mSmoothMove.z, Space::Self);
 
     int hDir = moveDir.x > 0.0f ? -1 : (moveDir.x < 0.0f ? 1 : 0);
 

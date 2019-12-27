@@ -28,10 +28,13 @@ void ThirdCamera::FreeCamera() {
         CameraPivot->transform().getPosition() + offset, 1.0f));
 
     if (CanControlDirection) {
+        Vector3f cam = transform()->getPosition();
+        Vector3f TargetBodyNextRotation = CameraPivot->transform().getPosition() - cam;
+        TargetBodyNextRotation.y = 0;
         Quaternion TargetBodyCurrentRotation = CameraPivot->transform().getRotation();
-            CameraPivot->transform().setRotation(TargetBodyCurrentRotation.lerp(Quaternion::Euler(Vector3f(CameraPivot->transform().getRotation().toEuler().x,
-                transform()->getRotation().toEuler().y,
-                CameraPivot->transform().getRotation().toEuler().z)), TargetBodyRotateLerp));
+        if (TargetBodyNextRotation != Vector3f::Zero) {
+            CameraPivot->transform().setRotation(Quaternion::LookRotation(TargetBodyNextRotation));
+        }
     }
     //Log::Info("%1%", Input::Get()->getMousePositionDelta().x);
     if(canControlDistance) {
@@ -46,7 +49,7 @@ void ThirdCamera::FreeCamera() {
     float eulerX = transform()->getLocalRotation().toEuler().x;
     float inputY = Input::Get()->getMousePositionDelta().y;
 
-    Mixcatch( Input::Get()->getMousePositionDelta().x);
+    //Mixcatch( Input::Get()->getMousePositionDelta().x);
     transform()->rotateAround(CameraPivot->transform().getPosition(),  
                                                                          Vector3f::Up, rotateSpeed * Input::Get()->getMousePositionDelta().x);
 

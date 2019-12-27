@@ -31,7 +31,7 @@ Vector3f PlayerControl::getDir() {
 Vector3f PlayerControl::dirFromGamepad() {
     auto dir2f = Input::Get()->getGamepadLeftStickAxis();
 
-    float camera_y = mainCamera->transform()->getLocalRotation().toEuler().y;
+
 
     Vector3f dirh;
     if(Input::Get()->isButtonHold(ButtonCode::Gamepad_X)) {
@@ -51,7 +51,7 @@ Vector3f PlayerControl::dirFromGamepad() {
     }
     auto dir = Vector3f(dir2f.x, dirh.y, dir2f.y);
 
-    dir = Quaternion::Euler(0.0f, camera_y, 0.0f) * dir;
+
 
     return !(dir.length() > 0.0f) ? Vector3f::Zero : dir.normalize();
 }
@@ -59,7 +59,7 @@ Vector3f PlayerControl::dirFromGamepad() {
 Vector3f PlayerControl::dirFromKeyboard() {
     Vector3f dir;
 
-    float camera_y = mainCamera->transform()->getLocalRotation().toEuler().y;
+
 
     if(Input::Get()->isButtonHold(ButtonCode::W)) {
         dir += Vector3f::Forward;
@@ -93,7 +93,6 @@ Vector3f PlayerControl::dirFromKeyboard() {
         dir += Vector3f::Down;
     }*/
 
-    dir = Quaternion::Euler(0.0f, camera_y, 0.0f) * dir;
 
     return dir.length() > 0.0f ? dir.normalize() : Vector3f::Zero;
 }
