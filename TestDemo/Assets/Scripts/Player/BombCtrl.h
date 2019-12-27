@@ -4,6 +4,7 @@
 
 using namespace Mix;
 
+// add this to player
 class BombCtrl final : public Script {
 public:
     BombCtrl() = default;
@@ -11,13 +12,20 @@ public:
 
     BombCtrl(HDmPool _pool);
 
+    int getBombNum();
+
+    void resumeBomb();
+
 private:
     void update() override;
 
     HDmPool pool;
 
-    constexpr static float bombTime = 5;
-    float bombTimeCnt = bombTime;
+    static constexpr float bombTime = 5;
+    float bombTimeCnt;
+
+    static constexpr int maxBombNum = 3;
+    int bombCnt;
 
     constexpr static float maxRadius = 3,
                            expandTime = 0.5,

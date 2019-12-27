@@ -3,6 +3,7 @@
 #include "../Mx/Scene/MxScene.h"
 #include "../Mx/Scene/MxSceneManager.h"
 #include "../Mx/Component/Camera/MxCamera.h"
+#include "../Mx/Component/AudioListener/MxAudioListener.h"
 #include "../ThirdPartyLibs/imgui/imgui.h"
 
 #include "Assets/Scripts/Prefabs/PrefabUilts.h"
@@ -15,10 +16,13 @@
 #include "Assets/Scripts/Control/PlayerControl.h"
 #include "Assets/Scripts/StateMachine/StateMachine.h"
 #include "Assets/Scripts/Player/BombCtrl.h"
+#include "Assets/Scripts/Player/PlayerHealth.h"
 
 // test codes
 #include "../Mx/Resource/MxResourceLoader.h"
 #include "../Mx/Graphics/Texture/MxTexture.h"
+#include "Assets/Scripts/Enemy/EnemyHealth.h"
+#include "Assets/Scripts/Enemy/EnemyAttack.h"
 
 std::string TestDemo::getAppName() const { return std::string("TestDemo"); }
 
@@ -31,6 +35,7 @@ void TestDemo::onMainSceneCreated() {
     // prefabs
     auto ballPrefab = std::make_shared<Prefab2>("TestDemo/Assets/Models/ball/ball_0.3_smooth.gltf", TexturePaths{});
     auto bigballPrefab = std::make_shared<Prefab2>("TestDemo/Assets/Models/bigball/BigBall.gltf", TexturePaths{});
+    auto butterflyPrefab = std::make_shared<Prefab2>("TestDemo/Assets/Models/butterfly/butterfly_fixed.gltf", TexturePaths{});
 
     // GameMgr
     auto gameMgr = GameObject::Instantiate("GameMgr");
@@ -49,6 +54,8 @@ void TestDemo::onMainSceneCreated() {
         reimu->setParent(player);
     }
 
+    StateMachine::player = player;
+
     // enemy
     auto enemy = GameObject::Instantiate("enemy", "enemy");
     {
@@ -65,30 +72,38 @@ void TestDemo::onMainSceneCreated() {
     enemy->transform().setPosition({0, 0, 25});
     enemy->transform().rotate({0, 1, 0}, -Math::Constants::Pi);
 
-    StateMachine::player = player;
     StateMachine::enemy = enemy;
 
     // camera
     auto camera = SceneManager::Get()->getActiveScene()->getMainCamera()->getGameObject();
     camera->transform().setPosition({0, 0, -20});
 
-    // addComponents;
+    // addComponents
+    // 642 -> 5k
     auto ballPool = gameMgr->addComponent<DmPool>(ballPrefab, "", "ball", 1000);
     auto bigballPool = gameMgr->addComponent<DmPool>(bigballPrefab, "", "bigball", 1000);
-    gameMgr->addComponent<GameMgr>(player,
-                                   enemy,
-                                   ballPool,
-                                   bigballPool);
+    auto playerBigballPool = gameMgr->addComponent<DmPool>(bigballPrefab, "", "player_bigball", 8);
+    // 162 -> 2.5k+
+    auto butterflyPool = gameMgr->addComponent<DmPool>(butterflyPrefab, "", "butterfly", 2500);
+    StateMachine::gameMgr = gameMgr->addComponent<GameMgr>(player,
+                                                           enemy,
+                                                           ballPool,
+                                                           bigballPool,
+                                                           butterflyPool);
 
     //camera->addComponent<CameraCtrl>(player);
     camera->addComponent<ThirdCamera>(player);
+    camera->addComponent<AudioListener>();
 
     // todo
-    //player->addComponent<AudioSource>();
-    player->addComponent<BombCtrl>(bigballPool);
+    StateMachine::playerBombCtrl = player->addComponent<BombCtrl>(playerBigballPool);
+    StateMachine::playerHealth = player->addComponent<PlayerHealth>(5);
     // ...
     player->addComponent<PlayerAdapter>();
     player->addComponent<PlayerControl>(camera->getComponent<Camera>());
+
+    StateMachine::enemyHealth = enemy->addComponent<EnemyHealth>();
+    //enemy->addComponent<EnemyAttack>();
 }
 
 void TestDemo::onGUI() {

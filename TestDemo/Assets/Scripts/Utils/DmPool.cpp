@@ -10,11 +10,11 @@ DmPool::DmPool(std::shared_ptr<Prefab2> _danmaku,
                                   dmPrefab(std::move(_danmaku)),
                                   name(std::move(_name)),
                                   tag(std::move(_tag)) {
-    available.reserve(_initCap);
+    pool.reserve(_initCap);
     while(--_initCap) {
         auto dm = dmPrefab->instantiate(name, tag);
         dm->setActive(false);
-        available.emplace_back(std::move(dm));
+        pool.emplace_back(std::move(dm));
     }
 }
 
@@ -31,34 +31,42 @@ HGameObject DmPool::createDm() {
 
     auto lastPos = iterCache;
     do {
-        auto& dm = available[iterCache];
+        auto& dm = pool[iterCache];
         if(!dm->activeSelf()) {
             dm->setActive(true);
+            dm->setName(name);
 
             ++iterCache;
-            if(iterCache == available.size())
+            if(iterCache == pool.size())
                 iterCache = 0;
             return dm;
         }
 
         ++iterCache;
-        if(iterCache == available.size())
+        if(iterCache == pool.size())
             iterCache = 0;
     }
     while(iterCache != lastPos);
 
-    available.emplace_back(dmPrefab->instantiate(name, tag));
+    pool.emplace_back(dmPrefab->instantiate(name, tag));
     iterCache = 0;
-    return available.back();
+    return pool.back();
 }
 
+// todo: check validity
 void DmPool::destoryDm(const HGameObject& _dm) {
-    // todo: check validity
-    toDestory.push_back(_dm);
+    if(_dm->getName() == "_-_")
+        return;
+    _dm->setName("_-_"); // magic flag
+    toDestroy.push_back(_dm);
+}
+
+void DmPool::destoryAll() {
+    
 }
 
 void DmPool::lateUpdate() {
-    for(const auto& dm : toDestory) {
+    for(const auto& dm : toDestroy) {
         dm->setActive(false);
         auto scrps = dm->getComponents<Script>();
         for(auto& scrp : scrps)
@@ -66,5 +74,5 @@ void DmPool::lateUpdate() {
     }
 
     //decltype(toDestory) empty(std::move(toDestory));
-    toDestory.clear();
+    toDestroy.clear();
 }

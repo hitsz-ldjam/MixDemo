@@ -7,7 +7,17 @@
 #include "../../../../Mx/Component/Renderer/MxRenderer.h"
 #include "../../../../Mx/Time/MxTime.h"
 
-BombCtrl::BombCtrl(HDmPool _pool) : pool(std::move(_pool)) {}
+BombCtrl::BombCtrl(HDmPool _pool) : pool(std::move(_pool)),
+                                    bombTimeCnt(bombTime),
+                                    bombCnt(maxBombNum) {}
+
+int BombCtrl::getBombNum() {
+    return bombCnt;
+}
+
+void BombCtrl::resumeBomb() {
+    bombCnt = maxBombNum;
+}
 
 void BombCtrl::update() {
     if(StateMachine::bombState != StateMachine::BombState::None) {
@@ -18,8 +28,11 @@ void BombCtrl::update() {
         bombTimeCnt -= Time::DeltaTime();
     }
 
-    if(Input::Get()->isButtonDown(ButtonCode::X)) {
-        if(StateMachine::bombState == StateMachine::BombState::None) {
+    if(bombCnt && Input::Get()->isButtonDown(ButtonCode::X)) {
+        if(StateMachine::bombState == StateMachine::BombState::None
+           && StateMachine::playerState == StateMachine::PlayerState::None) {
+            --bombCnt;
+
             StateMachine::bombState = StateMachine::BombState::BombTriggered;
 
             auto upAxis = -StateMachine::player->transform().forward();

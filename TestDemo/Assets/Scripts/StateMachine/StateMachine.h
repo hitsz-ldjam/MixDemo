@@ -3,6 +3,15 @@
 
 using namespace Mix;
 
+class GameMgr;
+class EnemyHealth;
+class PlayerHealth;
+class BombCtrl;
+
+#define CLEAR_DM_STATES (StateMachine::playerState == StateMachine::PlayerState::PlayerLoseLife \
+|| StateMachine::playerState == StateMachine::PlayerState::PlayerLoseLifeHandled \
+|| StateMachine::bombState == StateMachine::BombState::BombTriggered)
+
 class StateMachine final {
 public:
     static enum class PlayerState {
@@ -15,10 +24,15 @@ public:
     static enum class BombState {
         None,
         BombTriggered,
-        BombHandled
+        //BombHandled
     } bombState;
 
     static HGameObject player, enemy;
+
+    static SceneObjectHandle<GameMgr> gameMgr;
+    static SceneObjectHandle<EnemyHealth> enemyHealth;
+    static SceneObjectHandle<PlayerHealth> playerHealth;
+    static SceneObjectHandle<BombCtrl> playerBombCtrl;
 
     static void Update();
 

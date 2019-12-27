@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../../Mx/Component/Script/MxScript.h"
+#include "BombCtrl.h"
 
 using namespace Mix;
 
@@ -10,14 +11,22 @@ public:
     PlayerHealth() = default;
     ~PlayerHealth() = default;
 
-    PlayerHealth(HAudioSource _asrc);
+    PlayerHealth(const int _playerNum);
 
+    // todo
     void miss();
 
+    int getPlayerNum() const noexcept { return playerNum; }
+
 private:
+    void awake() override;
     void start() override;
     void update() override;
 
+    //static constexpr int maxPlayerNum = 8;
+    int playerNum;
+
+    HBombCtrl bombCtrl;
     HAudioSource asrc;
 };
 

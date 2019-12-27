@@ -26,11 +26,14 @@ public:
 
     // should only be called in Update()
     void destoryDm(const HGameObject& _dm);
+    void destoryAll(); // not impled yet
+
+    auto& getPool() { return pool; }
 
 private:
     void lateUpdate() override;
 
-    std::vector<HGameObject> available, toDestory;
+    std::vector<HGameObject> pool, toDestroy;
     size_t iterCache;
 
     std::shared_ptr<Prefab2> dmPrefab;

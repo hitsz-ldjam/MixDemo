@@ -11,7 +11,9 @@ public:
     Spell06MasterCtrl() = default;
     ~Spell06MasterCtrl() = default;
 
-    Spell06MasterCtrl(HDmPool _bigballPool);
+    Spell06MasterCtrl(HDmPool _bfPool);
+
+    void forceClearDm();
 
 private:
     void start() override;
@@ -19,8 +21,10 @@ private:
 
     void shootBlueSphereImpl();
     void shootPurpleSphereImpl();
+    void shootRedSphereImpl();
 
-    HDmPool bigballPool;
+    HDmPool bfPool;
+    std::vector<HGameObject> ctrls;
 };
 
 using HSpell06MasterCtrl = SceneObjectHandle<Spell06MasterCtrl>;
