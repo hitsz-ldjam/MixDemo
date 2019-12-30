@@ -1,5 +1,6 @@
 #include "DmPool.h"
 #include "../../../../Mx/GameObject/MxGameObject.h"
+#include "../StateMachine/StateMachine.h"
 
 MX_IMPLEMENT_RTTI(DmPool, Script)
 
@@ -61,9 +62,7 @@ void DmPool::destoryDm(const HGameObject& _dm) {
     toDestroy.push_back(_dm);
 }
 
-void DmPool::destoryAll() {
-    
-}
+void DmPool::destoryAll() { }
 
 void DmPool::lateUpdate() {
     for(const auto& dm : toDestroy) {
@@ -71,8 +70,23 @@ void DmPool::lateUpdate() {
         auto scrps = dm->getComponents<Script>();
         for(auto& scrp : scrps)
             dm->removeComponent(static_scene_object_cast<Component>(scrp));
+        dm->transform().setPosition(Vector3f::Zero);
+        dm->transform().setRotation(Quaternion::Identity);
     }
 
     //decltype(toDestory) empty(std::move(toDestory));
     toDestroy.clear();
+
+    Vector3f src(0, 5, 15), //StateMachine::player->transform().getPosition(), 
+             border(30, 25, 40);
+    for(const auto& dm : pool) {
+        if(!dm->activeSelf())
+            continue;
+
+        auto pos = dm->transform().getPosition();
+        if(abs(pos.x - src.x) > border.x ||
+           abs(pos.y - src.y) > border.y ||
+           abs(pos.z - src.z) > border.z)
+            destoryDm(dm);
+    }
 }

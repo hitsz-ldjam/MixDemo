@@ -68,7 +68,7 @@ void Spell14MasterCtrl::shootConeImpl1() {
 }
 void Spell14MasterCtrl::shootConeImpl2() {
     auto ctrl = GameObject::Instantiate("PurpleSphereCtrl");
-    auto ball1 = ctrl->addComponent<DmStraightExpandCtrl>(10, 14, 1.5, 162);
+    auto ball1 = ctrl->addComponent<DmStraightExpandCtrl>(ballPool, 10, 14, 1.5, 162);
     Vector3f locForward =enemy->transform().getPosition();
     Vector3f conePos = player->transform().getPosition();
     ShootCone::Shoot2(24,

@@ -59,8 +59,6 @@ Vector3f PlayerControl::dirFromGamepad() {
 Vector3f PlayerControl::dirFromKeyboard() {
     Vector3f dir;
 
-
-
     if(Input::Get()->isButtonHold(ButtonCode::W)) {
         dir += Vector3f::Forward;
     }
@@ -92,6 +90,7 @@ Vector3f PlayerControl::dirFromKeyboard() {
     if(Input::Get()->isButtonHold(ButtonCode::RCtrl)) {
         dir += Vector3f::Down;
     }*/
+
 
 
     return dir.length() > 0.0f ? dir.normalize() : Vector3f::Zero;

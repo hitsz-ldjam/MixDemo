@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../../Mx/Component/Script/MxScript.h"
+#include "../Utils/DmPool.h"
 
 using namespace Mix;
 
@@ -10,15 +11,19 @@ public:
     DmStraightMoveCtrl() = default;
     ~DmStraightMoveCtrl() = default;
 
-    DmStraightMoveCtrl(const float _speed) : speed(_speed) {}
+    DmStraightMoveCtrl(HDmPool _poo,
+                       const float _speed) : speed(_speed),
+                                             pool(std::move(_poo)) {}
 
     void add(const HGameObject& _dm);
+    void clearAll();
 
 private:
     void update() override;
 
     float speed;
     std::vector<HGameObject> dmList;
+    HDmPool pool;
 };
 
 using HDmStraightMoveCtrl = SceneObjectHandle<DmStraightMoveCtrl>;

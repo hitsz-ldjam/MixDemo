@@ -59,9 +59,9 @@ private:
 
     float distanceSpeed = 1.0f;
 
-    float rotateSpeed = .01f;
+    float rotateSpeed = .008f;
 
-    float rotateSpeedy = .01f;
+    float rotateSpeedy = .008f;
 
     float TargetBodyRotateLerp = 0.33f;
 

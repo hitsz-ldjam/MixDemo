@@ -13,12 +13,13 @@
 MX_IMPLEMENT_RTTI(Spell06MasterCtrl, Script)
 
 Spell06MasterCtrl::Spell06MasterCtrl(HDmPool _bfPool)
-    : bfPool(std::move(_bfPool)) {}
+    : bfPool(std::move(_bfPool)) {
+}
 
 void Spell06MasterCtrl::forceClearDm() {
-    for(auto& ctrl : ctrls) {
+    for (auto& ctrl : ctrls) {
         auto expands = ctrl->getComponents<DmStraightExpandCtrl>();
-        for(auto& expand : expands) {
+        for (auto& expand : expands) {
             expand->clearAll();
         }
     }
@@ -26,36 +27,36 @@ void Spell06MasterCtrl::forceClearDm() {
 
 void Spell06MasterCtrl::start() {
     Coroutine::startCoroutine([](MX_YIELD_HANDLE, HSpell06MasterCtrl _this) {
-        while(StateMachine::gameMgr->getState() == GameMgr::State::Spell6Exec) {
-            if(_this) _this->shootBlueSphereImpl(); else return;
+        while (StateMachine::gameMgr->getState() == GameMgr::State::Spell6Exec) {
+            if (_this) _this->shootBlueSphereImpl(); else return;
             yield_return(new Coroutine::WaitForSeconds(.4));
-            if(_this) _this->shootPurpleSphereImpl(); else return;
+            if (_this) _this->shootPurpleSphereImpl(); else return;
             yield_return(new Coroutine::WaitForSeconds(.4));
-            if(_this) _this->shootBlueSphereImpl(); else return;
+            if (_this) _this->shootBlueSphereImpl(); else return;
             yield_return(new Coroutine::WaitForSeconds(.4));
-            if(_this) _this->shootPurpleSphereImpl(); else return;
+            if (_this) _this->shootPurpleSphereImpl(); else return;
             yield_return(new Coroutine::WaitForSeconds(.4));
-            if(_this) _this->shootBlueSphereImpl(); else return;
+            if (_this) _this->shootBlueSphereImpl(); else return;
             yield_return(new Coroutine::WaitForSeconds(.4));
-            if(_this) _this->shootPurpleSphereImpl(); else return;
+            if (_this) _this->shootPurpleSphereImpl(); else return;
 
             yield_return(new Coroutine::WaitForSeconds(2.4));
 
-            if(_this) _this->shootRedSphereImpl(); else return;
+            if (_this) _this->shootRedSphereImpl(); else return;
             yield_return(new Coroutine::WaitForSeconds(1));
-            if(_this) _this->shootRedSphereImpl(); else return;
+            if (_this) _this->shootRedSphereImpl(); else return;
             yield_return(new Coroutine::WaitForSeconds(1));
-            if(_this) _this->shootRedSphereImpl(); else return;
+            if (_this) _this->shootRedSphereImpl(); else return;
             yield_return(new Coroutine::WaitForSeconds(1));
-            if(_this) _this->shootRedSphereImpl(); else return;
+            if (_this) _this->shootRedSphereImpl(); else return;
 
             yield_return(new Coroutine::WaitForSeconds(3));
         }
-    }, THIS_HANDLE);
+                              }, THIS_HANDLE);
 }
 
 void Spell06MasterCtrl::update() {
-    if(CLEAR_DM_STATES) {
+    if (CLEAR_DM_STATES) {
         forceClearDm();
     }
 }
@@ -67,30 +68,36 @@ void Spell06MasterCtrl::shootBlueSphereImpl() {
     auto ec2 = ctrl->addComponent<DmStraightExpandCtrl>(bfPool, 4, 8, 4, 162);
     auto ec3 = ctrl->addComponent<DmStraightExpandCtrl>(bfPool, 4, 4, 4, 162);
 
-    ShootSphere::Shoot(ShootSphere::SphereType::Verts_162,
+    ShootSphere::Shoot(ShootSphere::SphereType::Verts_42,
                        bfPool,
                        transform()->getPosition(),
                        transform()->getRotation(),
                        [&ec = ec1](const HGameObject& _dm) {
-                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Blue());
+                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::blueMatofBf);
+                           _dm->transform().setLocalScale(Vector3f(2));
+
                            ec->add(_dm);
                        });
 
-    ShootSphere::Shoot(ShootSphere::SphereType::Verts_162,
+    ShootSphere::Shoot(ShootSphere::SphereType::Verts_42,
                        bfPool,
                        transform()->getPosition(),
                        transform()->getRotation(),
                        [&ec = ec2](const HGameObject& _dm) {
-                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Blue());
+                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::blueMatofBf);
+                           _dm->transform().setLocalScale(Vector3f(2));
+
                            ec->add(_dm);
                        });
 
-    ShootSphere::Shoot(ShootSphere::SphereType::Verts_162,
+    ShootSphere::Shoot(ShootSphere::SphereType::Verts_42,
                        bfPool,
                        transform()->getPosition(),
                        transform()->getRotation(),
                        [&ec = ec3](const HGameObject& _dm) {
-                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Blue());
+                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::blueMatofBf);
+                           _dm->transform().setLocalScale(Vector3f(2));
+
                            ec->add(_dm);
                        });
 }
@@ -98,24 +105,28 @@ void Spell06MasterCtrl::shootBlueSphereImpl() {
 void Spell06MasterCtrl::shootPurpleSphereImpl() {
     auto ctrl = GameObject::Instantiate("PurpleSphereCtrl");
     ctrls.push_back(ctrl);
-    auto ec1 = ctrl->addComponent<DmStraightExpandCtrl>(bfPool, 4, 8, 4, 162);
-    auto ec2 = ctrl->addComponent<DmStraightExpandCtrl>(bfPool, 4, 4, 4, 162);
+    auto ec1 = ctrl->addComponent<DmStraightExpandCtrl>(bfPool, 4, 8, 3, 162);
+    auto ec2 = ctrl->addComponent<DmStraightExpandCtrl>(bfPool, 4, 4, 3, 162);
 
-    ShootSphere::Shoot(ShootSphere::SphereType::Verts_162,
+    ShootSphere::Shoot(ShootSphere::SphereType::Verts_42,
                        bfPool,
                        transform()->getPosition(),
                        Quaternion::AngleAxis(Math::Constants::Pi / 20, transform()->up()) * transform()->getRotation(),
                        [&ec = ec1](const HGameObject& _dm) {
-                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Purple());
+
+                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::purpleMatofBf);
+                           _dm->transform().setLocalScale(Vector3f(2));
                            ec->add(_dm);
                        });
 
-    ShootSphere::Shoot(ShootSphere::SphereType::Verts_162,
+    ShootSphere::Shoot(ShootSphere::SphereType::Verts_42,
                        bfPool,
                        transform()->getPosition(),
                        Quaternion::AngleAxis(Math::Constants::Pi / 20, transform()->up()) * transform()->getRotation(),
                        [&ec = ec2](const HGameObject& _dm) {
-                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Purple());
+
+                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::purpleMatofBf);
+                           _dm->transform().setLocalScale(Vector3f(2));
                            ec->add(_dm);
                        });
 }
@@ -129,34 +140,39 @@ void Spell06MasterCtrl::shootRedSphereImpl() {
     //auto ec2 = ctrl->addComponent<DmCurveExpandCtrl>(5, 12, 4, 162);
     //auto ec3 = ctrl->addComponent<DmCurveExpandCtrl>(5, 5, 4, 162);
 
-    auto ec1 = ctrl->addComponent<DmStraightExpandCtrl>(bfPool, 5, 17, 4, 162);
-    auto ec2 = ctrl->addComponent<DmStraightExpandCtrl>(bfPool, 5, 12, 4, 162);
-    auto ec3 = ctrl->addComponent<DmStraightExpandCtrl>(bfPool, 5, 5, 4, 162);
+    auto ec1 = ctrl->addComponent<DmStraightExpandCtrl>(bfPool, 5, 17, 3, 162);
+    auto ec2 = ctrl->addComponent<DmStraightExpandCtrl>(bfPool, 5, 12, 3, 162);
+    auto ec3 = ctrl->addComponent<DmStraightExpandCtrl>(bfPool, 5, 5, 3, 162);
 
-    ShootSphere::Shoot(ShootSphere::SphereType::Verts_162,
+    ShootSphere::Shoot(ShootSphere::SphereType::Verts_42,
                        bfPool,
                        transform()->getPosition(),
                        transform()->getRotation(),
                        [&ec = ec1](const HGameObject& _dm) {
-                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Red());
+                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::redMatofBf);
+                           _dm->transform().setLocalScale(Vector3f(2));
                            ec->add(_dm);
                        });
 
-    ShootSphere::Shoot(ShootSphere::SphereType::Verts_162,
+    ShootSphere::Shoot(ShootSphere::SphereType::Verts_42,
                        bfPool,
                        transform()->getPosition(),
                        transform()->getRotation(),
                        [&ec = ec2](const HGameObject& _dm) {
-                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Red());
+                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::redMatofBf);
+                           _dm->transform().setLocalScale(Vector3f(2));
                            ec->add(_dm);
                        });
 
-    ShootSphere::Shoot(ShootSphere::SphereType::Verts_162,
+    ShootSphere::Shoot(ShootSphere::SphereType::Verts_42,
                        bfPool,
                        transform()->getPosition(),
                        transform()->getRotation(),
                        [&ec = ec3](const HGameObject& _dm) {
-                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::Red());
+                           _dm->getComponent<Renderer>()->setMaterial(SimpleMaterials::redMatofBf);
+                           _dm->transform().setLocalScale(Vector3f(2));
+
+
                            ec->add(_dm);
                        });
 }

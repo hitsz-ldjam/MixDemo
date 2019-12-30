@@ -14,11 +14,13 @@ public:
     Spell03BlueSphere(HGameObject _player,
                       HDmPool _pool);
 
+    void forceClearDm();
+
 private:
     void start() override;
     void update() override;
 
-    HGameObject player;
+    HGameObject player, ctrlObj;
     HDmPool pool;
 };
 

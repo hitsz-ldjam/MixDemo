@@ -38,14 +38,19 @@ void GameMgr::start() {
         enemy->addComponent<AudioSource>(clip, true, true)->setVolume(0.75);
     }
 
-    state = State::Spell6Start;
+    state = State::Spell3Start;
 }
 
 void GameMgr::update() {
     static float timer = 0;
 
-    if(Input::Get()->isButtonDown(ButtonCode::J)) {
+    // for demo
+    if(Input::Get()->isButtonDown(ButtonCode::R)) {
         player->getComponent<PlayerHealth>()->miss();
+    }
+    if(Input::Get()->isButtonDown(ButtonCode::N)) {
+        StateMachine::enemyHealth->setTime(0);
+        StateMachine::enemyHealth->setHealth(0);
     }
 
     // todo: use ui
@@ -78,15 +83,18 @@ void GameMgr::update() {
 
             AddStateComp(enemy->addComponent<Spell03BlueSphere>(player, bigballPool));
             AddStateComp(enemy->addComponent<Spell03SwTail>(player, butterflyPool));
+            StateMachine::enemyHealth->setTime(30);
+            StateMachine::enemyHealth->setHealth(2000);
+            StateMachine::enemyHealth->startCounting();
             state = State::Spell3Exec;
             break;
         }
 
         case State::Spell3Exec:
         {
-            if(enemy->getComponent<EnemyHealth>()->getHealth() <= 0) {
-                cleanComps();
+            if(StateMachine::enemyHealth->getHealth() <= 0 || StateMachine::enemyHealth->getTime() <= 0) {
                 timer = 3;
+                cleanComps();
                 state = State::Spell3End;
             }
         }

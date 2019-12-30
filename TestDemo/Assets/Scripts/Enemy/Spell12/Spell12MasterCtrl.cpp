@@ -49,7 +49,7 @@ void Spell12MasterCtrl::update() {}
 
 void Spell12MasterCtrl::shootConeImpl() {
     auto ctrl = GameObject::Instantiate("PurpleSphereCtrl");
-    auto ball1 = ctrl->addComponent<DmStraightExpandCtrl>(3, 12, 3, 162);
+    auto ball1 = ctrl->addComponent<DmStraightExpandCtrl>(ballPool, 3, 12, 3, 162);
         ShootCone::Shoot(ballPool,
             transform()->getPosition(),
             transform()->getRotation(),

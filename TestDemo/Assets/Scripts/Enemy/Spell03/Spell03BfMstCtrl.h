@@ -10,7 +10,7 @@ MX_DECLARE_RTTI
 
 public:
     Spell03BfMstCtrl() = default;
-    ~Spell03BfMstCtrl() = default;
+    ~Spell03BfMstCtrl();
 
     Spell03BfMstCtrl(const Vector3f& _forwardDir,
                      const float _maxRadius,

@@ -6,24 +6,41 @@
 #include "../../../../../Mx/GameObject/MxGameObject.h"
 #include "../../../../../Mx/Component/Renderer/MxRenderer.h"
 #include "../../../../../Mx/Coroutine/MxCoroutine.hpp"
+#include "../../GameMgr.h"
+#include "../../StateMachine/StateMachine.h"
+#include "../../../../../Mx/Math/MxRandom.h"
 
 MX_IMPLEMENT_RTTI(Spell03SwTail, Script)
 
-Spell03SwTail::Spell03SwTail(HGameObject _player,
-                             HDmPool _pool) : player(std::move(_player)),
-                                              pool(std::move(_pool)) {}
-
-void Spell03SwTail::start() {
-    Coroutine::startCoroutine([](MX_YIELD_HANDLE, Spell03SwTail* _this) {
-        int cnt = 15;
-        while(--cnt != 0) {
-            yield_return(new Coroutine::WaitForSeconds(5.4f));
-            _this->shootBf();
-        }
-    }, this);
+void Spell03SwTail::forceClearDm() {
+    //for(auto& ctrl : ctrls) {
+    //    auto expands = ctrl->getComponents<DmStraightExpandCtrl>();
+    //    for(auto& expand : expands) {
+    //        expand->clearAll();
+    //    }
+    //}
 }
 
-void Spell03SwTail::update() { }
+Spell03SwTail::Spell03SwTail(HGameObject _player,
+                             HDmPool _pool) : player(std::move(_player)),
+                                              pool(std::move(_pool)),
+                                              rnd(9) {}
+
+void Spell03SwTail::start() {
+    Coroutine::startCoroutine([](MX_YIELD_HANDLE, HSpell03SwTail _this) {
+        while(StateMachine::gameMgr->getState() == GameMgr::State::Spell3Exec) {
+            yield_return(new Coroutine::WaitForSeconds(5.4f));
+            if(_this) _this->shootBf();
+            else return;
+        }
+    }, THIS_HANDLE);
+}
+
+void Spell03SwTail::update() {
+    if(CLEAR_DM_STATES) {
+        masters.clear();
+    }
+}
 
 HGameObject Spell03SwTail::shootSingleLayer(const Vector3f& _masterPos,
                                             const Quaternion& _masterRot,
@@ -48,9 +65,10 @@ HGameObject Spell03SwTail::shootSingleLayer(const Vector3f& _masterPos,
                            _dm->setParent(master);
                            auto& localRot = _dm->transform().getLocalRotation();
 
-                           auto randVal = 0; // todo Random.Range(-20, 20)
+                           auto randVal = rnd.getRange(-20.f, 20.f);
+                           randVal = Math::Radians(randVal);
                            _dm->transform().setLocalRotation(Quaternion::AngleAxis(randVal, Vector3f::Forward) * localRot);
-
+                           _dm->transform().setLocalScale(Vector3f(2.0f));
                            _dm->getComponent<Renderer>()->setMaterial(_mat); // todo
 
                            ctrl->add(_dm);
@@ -68,21 +86,25 @@ void Spell03SwTail::shootBf() {
           rotSpeed = Math::Radians(70.f);
 
     // todo: prediction
-    auto masterPos = player->transform().getPosition() + player->transform().forward() * 5;
+    auto masterPos = player->transform().getPosition() + player->transform().forward() * 10;
     auto masterRot = Quaternion::Identity;
 
     const auto rotAxis = player->transform().getPosition() - masterPos; // todo
     const auto masterRotDelta = Quaternion::AngleAxis(Math::Radians(60.f), rotAxis);
 
     maxRadius = 7;
-    shootSingleLayer(masterPos, masterRot, SimpleMaterials::Red(), maxRadius, forwardTime, rotSpeed, false);
+    auto master = shootSingleLayer(masterPos, masterRot, SimpleMaterials::redMatofBf, maxRadius, forwardTime, rotSpeed, false);
+    masters.push_back(master);
 
     maxRadius = 5.5;
-    shootSingleLayer(masterPos, masterRotDelta * masterRot, SimpleMaterials::Purple(), maxRadius, forwardTime, rotSpeed, true);
+    shootSingleLayer(masterPos, masterRotDelta * masterRot, SimpleMaterials::purpleMatofBf, maxRadius, forwardTime, rotSpeed, true);
+    masters.push_back(master);
 
     maxRadius = 4.2;
-    shootSingleLayer(masterPos, masterRot, SimpleMaterials::Blue(), maxRadius, forwardTime, rotSpeed, false);
+    shootSingleLayer(masterPos, masterRot, SimpleMaterials::blueMatofBf, maxRadius, forwardTime, rotSpeed, false);
+    masters.push_back(master);
 
     maxRadius = 3;
     shootSingleLayer(masterPos, masterRotDelta * masterRot, SimpleMaterials::Cyan(), maxRadius, forwardTime, rotSpeed, true);
+    masters.push_back(master);
 }

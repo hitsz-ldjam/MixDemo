@@ -40,12 +40,12 @@ void BombCtrl::update() {
             auto delta = Quaternion::AngleAxis(Math::Radians(60.f), upAxis);
 
             std::shared_ptr<Material> mats[] = {
-                SimpleMaterials::Red(),
-                SimpleMaterials::Green(),
-                SimpleMaterials::Blue(),
-                SimpleMaterials::Red(),
-                SimpleMaterials::Green(),
-                SimpleMaterials::Blue()
+                SimpleMaterials::redMat,
+                SimpleMaterials::greenMat,
+                SimpleMaterials::blueMat,
+                SimpleMaterials::redMat,
+                SimpleMaterials::greenMat,
+                SimpleMaterials::blueMat
             };
 
             for(int i = 0; i < 6; ++i) {

@@ -49,26 +49,20 @@ void ThirdCamera::FreeCamera() {
     float eulerX = transform()->getLocalRotation().toEuler().x;
     float inputY = Input::Get()->getMousePositionDelta().y;
 
+    Vector3f Right = CameraPivot->transform().getPosition() - transform()->getPosition();
+    Right.y = 0;
+    Vector3f NewRight(Right.z, 0, -Right.x);
+
     //Mixcatch( Input::Get()->getMousePositionDelta().x);
     transform()->rotateAround(CameraPivot->transform().getPosition(),  
                                                                          Vector3f::Up, rotateSpeed * Input::Get()->getMousePositionDelta().x);
 
-    if(eulerX > maxDepression && eulerX < 1.57) {
-        if(inputY > 0)
-            transform()->rotateAround(CameraPivot->transform().getPosition() + fouces, 
-                                                                                Vector3f::Right, rotateSpeedy * inputY);
-    }
-    else if(eulerX < 6.28 - maxEvelation && eulerX > 4.71) {
-        if(inputY < 0)
-            transform()->rotateAround(CameraPivot->transform().getPosition() + fouces, 
-                                                                                Vector3f::Right, rotateSpeedy * inputY);
-    }
-    else {
 
-        transform()->rotateAround(CameraPivot->transform().getPosition() + fouces, 
-                                                                                Vector3f::Right, rotateSpeedy * inputY);
+     transform()->rotateAround(CameraPivot->transform().getPosition() + fouces, 
+                                                                         NewRight, rotateSpeedy * inputY);
+    
 
-    }
+
 
     if (transform()->getLocalRotation().z) {
         float rotx = transform()->getLocalRotation().x;

@@ -1,6 +1,7 @@
 #pragma once
 #include "../../../../../Mx/Component/Script/MxScript.h"
 #include "../../Utils/DmPool.h"
+#include "../../../../../Mx/Math/MxRandom.h"
 
 using namespace Mix;
 
@@ -14,6 +15,9 @@ public:
 
     Spell03SwTail(HGameObject _player,
                   HDmPool _pool);
+
+    void forceClearDm();
+
 private:
     void start() override;
     void update() override;
@@ -30,6 +34,8 @@ private:
 
     HGameObject player;
     HDmPool pool; // pool for bf dm
+    Random rnd;
+    std::vector<HGameObject> masters;
 };
 
 using HSpell03SwTail = SceneObjectHandle<Spell03SwTail>;

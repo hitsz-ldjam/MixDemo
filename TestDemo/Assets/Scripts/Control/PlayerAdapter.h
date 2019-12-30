@@ -28,10 +28,10 @@ private:
 
     void fixedUpdate() override;
 
-    float mHMoveSpeed = 0.5f;
-    float mLMoveSpeed = 0.2f;
-    float mAccelerate = 0.2f;
-    float mDecelerate = 0.2f;
+    float mHMoveSpeed = 1.5f;
+    float mLMoveSpeed = 1.0f;
+    float mAccelerate = 0.5f;
+    float mDecelerate = 0.5f;
     Vector3f mSmoothMove;
 
 };

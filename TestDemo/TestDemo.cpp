@@ -17,12 +17,10 @@
 #include "Assets/Scripts/StateMachine/StateMachine.h"
 #include "Assets/Scripts/Player/BombCtrl.h"
 #include "Assets/Scripts/Player/PlayerHealth.h"
-
-// test codes
-#include "../Mx/Resource/MxResourceLoader.h"
-#include "../Mx/Graphics/Texture/MxTexture.h"
 #include "Assets/Scripts/Enemy/EnemyHealth.h"
 #include "Assets/Scripts/Enemy/EnemyAttack.h"
+#include "Assets/Scripts/Player/PlayerAttack.h"
+#include "../Mx/Engine/MxPlatform.h"
 
 std::string TestDemo::getAppName() const { return std::string("TestDemo"); }
 
@@ -31,6 +29,8 @@ Version TestDemo::getAppVersion() const { return Version(1, 0, 0); }
 void TestDemo::onMainSceneCreated() {
     // utils
     SimpleMaterials::Init();
+    Platform::SetRelativeMouseMode(true);
+    Platform::HideCursor();
 
     // prefabs
     auto ballPrefab = std::make_shared<Prefab2>("TestDemo/Assets/Models/ball/ball_0.3_smooth.gltf", TexturePaths{});
@@ -50,7 +50,7 @@ void TestDemo::onMainSceneCreated() {
                                                              "TestDemo/Assets/Models/reimu/te1.png",
                                                              "TestDemo/Assets/Models/reimu/te2.png"
                                                          });
-        reimu->transform().rotate({0, 1, 0}, Math::Constants::Pi);
+        reimu->transform().rotate({ 0, 1, 0 }, Math::Constants::Pi);
         reimu->setParent(player);
     }
 
@@ -66,17 +66,17 @@ void TestDemo::onMainSceneCreated() {
                                                               "TestDemo/Assets/Models/reimu/te1.png",
                                                               "TestDemo/Assets/Models/reimu/te2.png"
                                                           });
-        yuyuko->transform().rotate({0, 1, 0}, Math::Constants::Pi);
+        yuyuko->transform().rotate({ 0, 1, 0 }, Math::Constants::Pi);
         yuyuko->setParent(enemy);
     }
-    enemy->transform().setPosition({0, 0, 25});
-    enemy->transform().rotate({0, 1, 0}, -Math::Constants::Pi);
+    enemy->transform().setPosition({ 0, 0, 25 });
+    enemy->transform().rotate({ 0, 1, 0 }, -Math::Constants::Pi);
 
     StateMachine::enemy = enemy;
 
     // camera
     auto camera = SceneManager::Get()->getActiveScene()->getMainCamera()->getGameObject();
-    camera->transform().setPosition({0, 0, -20});
+    camera->transform().setPosition({ 0, 0, -20 });
 
     // addComponents
     // 642 -> 5k
@@ -98,6 +98,7 @@ void TestDemo::onMainSceneCreated() {
     // todo
     StateMachine::playerBombCtrl = player->addComponent<BombCtrl>(playerBigballPool);
     StateMachine::playerHealth = player->addComponent<PlayerHealth>(5);
+    player->addComponent<PlayerAttack>();
     // ...
     player->addComponent<PlayerAdapter>();
     player->addComponent<PlayerControl>(camera->getComponent<Camera>());
@@ -107,10 +108,5 @@ void TestDemo::onMainSceneCreated() {
 }
 
 void TestDemo::onGUI() {
-    //auto img = ResourceLoader::Get()->load<Texture2D>("TestDemo/Assets/Figure/reimu/reimu_yuyu.png");
-    //{
-    //    ImGui::Begin("test");
-    //    ImGui::Image((void*)img->getID(), ImVec2(img->width(), img->height()));
-    //    ImGui::End();
-    //}
+    ImGui::ShowDemoWindow();
 }

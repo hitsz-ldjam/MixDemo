@@ -4,6 +4,19 @@
 
 MX_IMPLEMENT_RTTI(Spell03BfMstCtrl, Script)
 
+Spell03BfMstCtrl::~Spell03BfMstCtrl() {
+    for(auto i = 0u; i < dmList.size();) {
+        auto& dm = dmList[i];
+        if(dm->getName() == "_-_") {
+            dm = dmList.back(); // todo: Is self assigning safe?
+            dmList.erase(dmList.end() - 1);
+            continue;
+        }
+        pool->destoryDm(dm);
+        ++i;
+    }
+}
+
 Spell03BfMstCtrl::Spell03BfMstCtrl(const Vector3f& _forwardDir,
                                    const float _maxRadius,
                                    const float _forwardTime,
@@ -20,13 +33,18 @@ void Spell03BfMstCtrl::add(const HGameObject& _dm) {
 }
 
 void Spell03BfMstCtrl::start() {
-    Coroutine::startCoroutine([](MX_YIELD_HANDLE, Spell03BfMstCtrl* _this) {
-        _this->state = State::Forward;
+    Coroutine::startCoroutine([](MX_YIELD_HANDLE, HSpell03BfMstCtrl _this) {
+        if(_this) _this->state = State::Forward;
+        else return;
+
         yield_return(new Coroutine::WaitForSeconds(_this->forwardTime));
-        _this->state = State::Backward;
+        if(_this) _this->state = State::Backward;
+        else return;
+
         yield_return(new Coroutine::WaitForSeconds(_this->forwardTime - 0.05f)); // magic
-        _this->state = State::Die;
-    }, this);
+        if(_this) _this->state = State::Die;
+        else return;
+    }, THIS_HANDLE);
 }
 
 void Spell03BfMstCtrl::update() {
@@ -37,13 +55,24 @@ void Spell03BfMstCtrl::update() {
         case State::Forward:
         case State::Backward:
         {
-            for(auto& dm : dmList) {
+            for(auto i = 0u; i < dmList.size();) {
+                auto& dm = dmList[i];
+                if(dm->getName() == "_-_") {
+                    dm = dmList.back(); // todo: Is self assigning safe?
+                    dmList.erase(dmList.end() - 1);
+                    continue;
+                }
                 dm->transform().translate(Vector3f(0, 0, vel * Time::DeltaTime()));
-                //auto& pos = dm->transform().getLocalPosition();
-                //dm->transform().setLocalPosition(pos + vel * Time::DeltaTime() * forwardDir);
+                ++i;
             }
-            break;
+
+            //for(auto& dm : dmList) {
+            //    dm->transform().translate(Vector3f(0, 0, vel * Time::DeltaTime()));
+            //    //auto& pos = dm->transform().getLocalPosition();
+            //    //dm->transform().setLocalPosition(pos + vel * Time::DeltaTime() * forwardDir);
+            //}
         }
+            break;
 
             //case State::Backward:
             //{
@@ -56,8 +85,15 @@ void Spell03BfMstCtrl::update() {
 
         case State::Die:
         {
-            for(auto& dm : dmList) {
+            for(auto i = 0u; i < dmList.size();) {
+                auto& dm = dmList[i];
+                if(dm->getName() == "_-_") {
+                    dm = dmList.back(); // todo: Is self assigning safe?
+                    dmList.erase(dmList.end() - 1);
+                    continue;
+                }
                 pool->destoryDm(dm);
+                ++i;
             }
             state = State::Dead;
             break;
